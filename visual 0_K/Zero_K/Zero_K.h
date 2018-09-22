@@ -1,5 +1,4 @@
-#ifndef ZERO_K_H_INCLUDED
-#define ZERO_K_H_INCLUDED
+#pragma once
 
 #include <Windows.h>
 #include "opencv2/opencv.hpp"
@@ -21,9 +20,9 @@ inline int KEY_DOWN( int key ){
 
 using Color = Vec3b;
 
-#include "Classes.h"
+#include "Game.h"
 #include "Globals.h"
 #include "mathFunctional.h"
 #include "Functional.h"
+#include "Camera.h"
 
-#endif // ZERO_K_H_INCLUDED

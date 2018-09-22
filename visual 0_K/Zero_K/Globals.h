@@ -1,5 +1,4 @@
-#ifndef GLOBALS_H_INCLUDED
-#define GLOBALS_H_INCLUDED
+#pragma once
 
 
 Point imgSize( 640 / 2, 480 / 2 ),
@@ -30,6 +29,3 @@ Mat frame,
 
 GameObject ball;
 Arkanoid robot = ArduinoBot( 1 );
-
-
-#endif // GLOBALS_H_INCLUDED

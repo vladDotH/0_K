@@ -1,5 +1,4 @@
-#ifndef CLASSES_H_INCLUDED
-#define CLASSES_H_INCLUDED
+#pragma once
 
 class GameObject {
 private:
@@ -93,6 +92,8 @@ public:
             hammerMove( -100 );
             this_thread::sleep_for( chrono::milliseconds( 250 ) );
 
+			hammerMove(0);
+
         } ).detach();
     }
 
@@ -162,5 +163,3 @@ public:
 
     void connect() = delete;
 };
-
-#endif // ClASSES_H_INCLUDED

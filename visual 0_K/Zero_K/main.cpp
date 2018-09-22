@@ -1,7 +1,5 @@
 #include "Zero_K.h"
 
-#include "VisualFunction.h"
-
 int main()
 {
     VideoCapture capture( 0 );
@@ -13,12 +11,6 @@ int main()
 	
     namedWindow( "cam" );
 	namedWindow("HSVimage");
-
-	namedWindow("draw");
-
-	VisualFunction func(CvSize( 700, 700 ));
-	
-	setMouseCallback("draw", VisualFunction::getCallBack, (void*)&func);
 
     setMouseCallback( "cam", MainCallBack );
 
@@ -38,8 +30,6 @@ int main()
     createTrackbar( "cubic", "robot control", &robot.RIDE_COEFFS.cube, 100, barBack );
     createTrackbar( "integral", "robot control", &robot.RIDE_COEFFS.integral, 100, barBack );
     createTrackbar( "differencial", "robot control", &robot.RIDE_COEFFS.differencial, 100, barBack );
-
-	bool p = true;
 		  
     while( true )
     {
@@ -119,7 +109,6 @@ int main()
 
         imshow( "cam", RGBimage );
 		imshow("HSVimage", HSVimage);
-		imshow("draw", func.getImage());
 
         char key = waitKey( 5 );
 
@@ -142,15 +131,19 @@ int main()
             robot.switchDirection();
 
         if( key == 'g' )
-            metrical = metrical_generator( frameBegin, frameEnd );
+            tie_metrical( metrical );
+
+		if (key == 'f')
+			metrical(Point(20, 20));
+
+		if (key == 'm')
+			metrical( imgSize / 2 );
 
 		if (key == 'r') {
 			robot.setColor(Color(-999, -999, -999));
 			ball.setColor(Color(-999, -999, -999));
 		}
 
-		if (key == 'f')
-			cout << func(50) << endl;
 
     }
 

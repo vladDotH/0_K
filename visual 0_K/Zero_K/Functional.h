@@ -1,6 +1,4 @@
-#ifndef FUNCTIONAL_H_INCLUDED
-#define FUNCTIONAL_H_INCLUDED
-
+#pragma once
 
 Color read( Mat img, Point pos )
 {
@@ -38,4 +36,3 @@ void MainCallBack( int event, int x, int y, int flags, void* userdata )
 
 void barBack( int, void* ) { }
 
-#endif // FUNCTIONAL_H_INCLUDED
