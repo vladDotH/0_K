@@ -76,9 +76,14 @@
     <LibraryPath>C:\Users\ОЛЕГ\Desktop\OpenCv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExecutablePath>C:\Users\ОЛЕГ\Desktop\OpenCv\opencv\build\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Users\ОЛЕГ\Desktop\OpenCv\opencv\build\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ОЛЕГ\Desktop\OpenCv\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>C:\Users\KK\Desktop\OpenCV3_4\opencv\build\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
+    <IncludePath>C:\Users\KK\Desktop\OpenCV3_4\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\KK\Desktop\OpenCV3_4\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>C:\Users\KK\Desktop\OpenCV3_4\opencv\build\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\KK\Desktop\OpenCV3_4\opencv\build\x64\vc15\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>C:\Users\KK\Desktop\OpenCV3_4\opencv\build\x64\vc15\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,6 +103,9 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
+    <Link>
+      <AdditionalDependencies>opencv_world343.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -125,7 +133,7 @@
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opencv_world342.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world343.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -133,7 +141,6 @@
     <ClCompile Include="Arduino\wincom.cpp" />
     <ClCompile Include="Lego\EV3.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="VisualFunction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Arduino\motor.h" />
@@ -144,8 +151,8 @@
     <ClInclude Include="Lego\bytecodes.hpp" />
     <ClInclude Include="Lego\EV3.hpp" />
     <ClInclude Include="mathFunctional.h" />
-    <ClInclude Include="VisualFunction.h" />
     <ClInclude Include="Zero_K.h" />
+    <ClInclude Include="Zero_K_LIBS.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

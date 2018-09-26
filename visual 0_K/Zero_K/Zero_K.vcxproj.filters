@@ -36,9 +36,6 @@
     <ClCompile Include="Arduino\wincom.cpp">
       <Filter>arduino</Filter>
     </ClCompile>
-    <ClCompile Include="VisualFunction.cpp">
-      <Filter>funcDrawer</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Classes.h">
@@ -68,8 +65,8 @@
     <ClInclude Include="Arduino\wincom.h">
       <Filter>arduino</Filter>
     </ClInclude>
-    <ClInclude Include="VisualFunction.h">
-      <Filter>funcDrawer</Filter>
+    <ClInclude Include="Zero_K_LIBS.h">
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
