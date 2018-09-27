@@ -150,7 +150,6 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Lego\bytecodes.hpp" />
     <ClInclude Include="Lego\EV3.hpp" />
-    <ClInclude Include="mathFunctional.h" />
     <ClInclude Include="Zero_K.h" />
     <ClInclude Include="Zero_K_Core.h" />
   </ItemGroup>
