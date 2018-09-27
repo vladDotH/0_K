@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Zero_K_LIBS.h"
+#include "Zero_K_Core.h"
 #include "Game.h"
 
 
@@ -17,7 +17,33 @@ public:
 	bool read();
 };
 
-class RoboEye : public Camera {
+class MathModule {
+protected:
+	function<Point2d(Point pos)> metrical;
+
+public:
+	const double Pi = 3.14159265359;
+
+	double rad(double deg) {
+		return deg * Pi / 180;
+	}
+
+	double deg(double rad) {
+		return rad * 180 / Pi;
+	}
+
+	double mod(Point pos) {
+		return sqrt(pow(pos.x, 2) + pow(pos.y, 2));
+	}
+
+	Point2d metricalTransform(Point pos) {
+		return metrical(pos);
+	}
+
+	virtual void tie_metrical() = 0;
+};
+
+class RoboEye : public Camera, public MathModule {
 private:
 	Point imgSize,
 		frameBegin,
@@ -42,25 +68,6 @@ private:
 
 	Mat RGBimage,
 		HSVimage;
-
-public:
-	RoboEye(int port, Point size = Point( 320, 240 ) );
-	~RoboEye();
-
-	void makeImage();
-	void showBorders();
-	void centerMarking(GameObject &obj);
-	void reloadWindow();
-
-	void setMouseOnRGB( void (*callBack) (int event, int x, int y, int flags, void* userdata) );
-	void makeControlBars(Arkanoid &robot);
-
-	void switchHL();
-	void switchMarking();
-	void switchBordersVisible();
-
-	Color readHSV(Point pos);
-	void writeRGB(Point pos, Color color);
 
 	struct {
 		struct {
@@ -95,6 +102,38 @@ public:
 		} CONTROL;
 	} NAMES;
 
+	GameObject &ball;
+	Arkanoid &robot;
+
+public:
+	RoboEye( Arkanoid &robot, GameObject &ball, 
+		int port, Point size = Point( 640, 480 ) );
+	~RoboEye();
+
+	bool makeImage();
+	void showBorders();
+	void centerMarking();
+	void updateWindow();
+
+	void makeControlBars();
+
+	void switchHL();
+	void switchMarking();
+	void switchBordersVisible();
+
+	Color readHSV(Point pos);
+	void writeRGB(Point pos, Color color);
+
+	bool pixelCompare(GameObject &obj, Color pixel);
+	void createMouseCallBack();
+
+	Point getBegin();
+	Point getEnd();
+
+	Arkanoid& getRobotReference();
+	GameObject& getBallReference();
+
+	void tie_metrical();
 };
 
-void barBack(int, void*); ///kostûëü
+void barBack(int, void*);

@@ -22,6 +22,9 @@
     <Filter Include="funcDrawer">
       <UniqueIdentifier>{c102f941-4a62-40ea-a176-95b6a94a002d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="camera">
+      <UniqueIdentifier>{7e364728-bc42-4671-b6de-d78547c0180b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,17 +39,11 @@
     <ClCompile Include="Arduino\wincom.cpp">
       <Filter>arduino</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Classes.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Functional.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="mathFunctional.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -65,8 +62,14 @@
     <ClInclude Include="Arduino\wincom.h">
       <Filter>arduino</Filter>
     </ClInclude>
-    <ClInclude Include="Zero_K_LIBS.h">
+    <ClInclude Include="Game.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Zero_K_Core.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

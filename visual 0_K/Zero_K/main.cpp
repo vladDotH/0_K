@@ -1,145 +1,109 @@
 #include "Zero_K.h"
 
-//test change 
-
 int main()
 {
-    VideoCapture capture( 0 );
+	GameObject ball;
+	Arkanoid robot = ArduinoBot(1);
 
-    if( !capture.isOpened() )
-    {
-        return -1;
-    }
-	
-    namedWindow( "cam" );
-	namedWindow("HSVimage");
+	RoboEye vision(robot, ball, 0);
 
-    setMouseCallback( "cam", MainCallBack );
+	//vision.makeControlBars();
 
-    namedWindow( "color detecting" );
-    createTrackbar( "hue", "color detecting", &HSV.hueDiff, 255, barBack );
-    createTrackbar( "satur.", "color detecting", &HSV.MIN.saturation, 255, barBack );
-    createTrackbar( "brigt.", "color detecting", &HSV.MIN.brigthness, 255, barBack );
+	//vision.createMouseCallBack(robot, ball);
 
-    namedWindow( "borders" );
-    createTrackbar( "high", "borders", &frameBegin.y, imgSize.y, barBack );
-    createTrackbar( "left", "borders", &frameBegin.x, imgSize.x, barBack );
-    createTrackbar( "down", "borders", &frameEnd.y, imgSize.y, barBack );
-    createTrackbar( "right", "borders", &frameEnd.x, imgSize.x, barBack );
+	while (true)
+	{
+		vision.makeImage();
 
-    namedWindow( "robot control" );
-    createTrackbar( "proportional", "robot control", &robot.RIDE_COEFFS.prop, 100, barBack );
-    createTrackbar( "cubic", "robot control", &robot.RIDE_COEFFS.cube, 100, barBack );
-    createTrackbar( "integral", "robot control", &robot.RIDE_COEFFS.integral, 100, barBack );
-    createTrackbar( "differencial", "robot control", &robot.RIDE_COEFFS.differencial, 100, barBack );
-		  
-    while( true )
-    {
-        if( !capture.read( frame ) )
-            continue;
+		robot.refuse();
+		ball.refuse();
 
-        resize( frame, RGBimage, imgSize );
+		for (int w = vision.getBegin().x; w < vision.getEnd().x; w++)
+		{
+			for (int h = vision.getBegin().y; h < vision.getEnd().y; h++)
+			{
+				Color pixel = vision.readHSV(Point(w, h));
 
-        GaussianBlur( RGBimage, RGBimage, Size( 3, 3 ), 0 );
+				if (vision.pixelCompare(robot, pixel))
+				{
+					robot.addpixel(w, h);
+					vision.writeRGB(Point(w, h), Color(150, 20, 120));
+				}
 
-        cvtColor( RGBimage, HSVimage, CV_BGR2HSV );
+				if (vision.pixelCompare(ball, pixel))
+				{
+					ball.addpixel(w, h);
+					vision.writeRGB(Point(w, h), Color(150, 100, 0));
+				}
 
-        robot.refuse();
-        ball.refuse();
+			}
+		}
 
-        for ( int w = frameBegin.x; w < frameEnd.x; w++ )
-        {
-            for ( int h = frameBegin.y; h < frameEnd.y; h++ )
-            {
-                Color pixel = read( HSVimage, Point( w, h ) );
+		robot.detect();
+		ball.detect();
 
-                if( eqPix( robot.getColor(), pixel, HSV.hueDiff, HSV.MIN.saturation, HSV.MIN.brigthness ) )
-                {
-                    robot.addpixel( w, h );
+		vision.centerMarking();
 
-                    if( highLightning )
-                        write( RGBimage, Point( w, h ), Color( 150, 20, 120 ) );
-                }
+		vision.showBorders();
 
-                if( eqPix( ball.getColor(), pixel, HSV.hueDiff, HSV.MIN.saturation, HSV.MIN.brigthness ) )
-                {
-                    ball.addpixel( w, h );
+		if (robot.getMode())
+		{
+			if (KEY_DOWN(VK_LEFT))
+				robot.move(100);
+			else if (KEY_DOWN(VK_RIGHT))
+				robot.move(-100);
+			else if (KEY_DOWN(VK_UP))
+				robot.kick();
+			else
+				robot.move(0);
+		}
 
-                    if( highLightning )
-                        write( RGBimage, Point( w, h ), Color( 150, 100, 0 ) );
-                }
+		else
+		{
+			if (robot.getCounter() > robot.CONTROL_VALUES.selfMinPixels && ball.getCounter() > robot.CONTROL_VALUES.ballMinPixels) {
 
-            }
-        }
+				Point2d difference = robot.getPosition() - ball.getPosition();
 
-        robot.detect();
-        ball.detect();
+				if (abs(difference.y) < robot.CONTROL_VALUES.kickRange)
+					robot.kick();
 
-        if( markCenter )
-        {
-            circle( RGBimage, robot.getPosition(), 6, Scalar( 0, 0, 0 ), -1 );
-            circle( RGBimage, ball.getPosition(), 6, Scalar( 255, 255, 255 ), -1 );
-        }
+				int speed = difference.x * robot.RIDE_COEFFS.prop
+					+ pow( difference.x, 3 ) * robot.RIDE_COEFFS.cube
+					+ robot.CONTROL_VALUES.integralValue * robot.RIDE_COEFFS.integral;
 
-        if( showFrame )
-        {
-            rectangle( RGBimage, frameBegin, frameEnd, Scalar( 0, 0, 150 ), 3 );
-        }
+				if (robot.CONTROL_VALUES.integralValue * difference.x < 0)
+					robot.CONTROL_VALUES.integralValue += difference.x;
+				
+			}
+		}
 
-        if( robot.getMode() )
-        {
-            if( KEY_DOWN( VK_LEFT ) )
-                robot.move( 100 );
-            else if( KEY_DOWN( VK_RIGHT ) )
-                robot.move( -100 );
-            else if( KEY_DOWN( VK_UP ) )
-                robot.kick();
-            else
-                robot.move( 0 );
-        }
+		vision.updateWindow();
 
-        else
-        {
-            Point difference = robot.getPosition() - ball.getPosition();
+		char key = waitKey(5);
 
-            if( abs( difference.y ) < 30 )
-                robot.kick();
+		if (key == VK_ESCAPE)
+			break;
 
-            int speed = difference.x * robot.RIDE_COEFFS.prop                         
-                + difference.x * difference.x * difference.x * robot.RIDE_COEFFS.cube;
-        }
+		if (key == 'h')
+			vision.switchHL();
 
-        imshow( "cam", RGBimage );
-		imshow("HSVimage", HSVimage);
+		if (key == 'c')
+			vision.switchMarking();
 
-        char key = waitKey( 5 );
+		if (key == 'b')
+			vision.switchBordersVisible();
 
-        if( key == VK_ESCAPE )
-            break;
+		if (key == 'a')
+			robot.switchMode();
 
-        if( key == 'h' )
-            highLightning = !highLightning;
+		if (key == 't')
+			robot.switchDirection();
 
-        if( key == 'c' )
-            markCenter = !markCenter;
-
-        if( key == 'b' )
-            showFrame = !showFrame;
-
-        if( key == 'a' )
-            robot.switchMode();
-
-        if( key == 't' )
-            robot.switchDirection();
-
-        if( key == 'g' )
-            tie_metrical( metrical );
+		if (key == 'g')
+			vision.tie_metrical();
 
 		if (key == 'f')
-			metrical(Point(20, 20));
-
-		if (key == 'm')
-			metrical( imgSize / 2 );
+			vision.metricalTransform(Point(20, 20));
 
 		if (key == 'r') {
 			robot.setColor(Color(-999, -999, -999));
@@ -147,7 +111,7 @@ int main()
 		}
 
 
-    }
+	}
 
-    return 0;
+	return 0;
 }

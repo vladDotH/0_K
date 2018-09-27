@@ -14,4 +14,9 @@
 using namespace cv;
 using namespace std;
 
+
 using Color = Vec3b;
+
+inline int KEY_DOWN(int key) {
+	return GetAsyncKeyState(key) & 0x8000;
+}

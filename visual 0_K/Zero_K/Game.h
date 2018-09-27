@@ -22,8 +22,10 @@ public:
     }
 
     void detect() {
-        if( pixelCounter != 0 )
-            pos /= pixelCounter;
+		if (pixelCounter != 0) {
+            pos.x /= pixelCounter;
+			pos.y /= pixelCounter;
+		}
     }
 
     int getCounter() {
@@ -65,16 +67,19 @@ protected:
 
 public:
     struct {
-        int prop;
-        int cube;
-        int integral;
-        int differencial;
+        int prop = 0;
+        int cube = 0;
+        int integral = 0;
+        int differencial = 0;
     } RIDE_COEFFS;
 
 	struct {
 		int kickRange;
 		int ballMinPixels;
 		int selfMinPixels;
+
+		int integralValue;
+		int oldDifference;
 	} CONTROL_VALUES;
 
     virtual void move( int speed ) { };

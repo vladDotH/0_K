@@ -19,7 +19,8 @@ bool Camera::read()
 
 
 
-RoboEye::RoboEye(int port, Point size ) : Camera(port) 
+RoboEye::RoboEye(Arkanoid &robot, GameObject &ball,
+	int port, Point size) : Camera(port), ball(ball), robot(robot)
 {
 	imgSize = size;
 	frameBegin = Point(0, 0);
@@ -39,49 +40,52 @@ RoboEye::RoboEye(int port, Point size ) : Camera(port)
 	createTrackbar(NAMES.BORDERS.left, NAMES.BORDERS.name, &frameBegin.x, imgSize.x, barBack);
 	createTrackbar(NAMES.BORDERS.down, NAMES.BORDERS.name, &frameEnd.y, imgSize.y, barBack);
 	createTrackbar(NAMES.BORDERS.right, NAMES.BORDERS.name, &frameEnd.x, imgSize.x, barBack);
+
+	makeControlBars();
+	createMouseCallBack();
 }
 
 RoboEye::~RoboEye()
 {
 	RGBimage.release();
 	HSVimage.release();
+	capture.release();
 }
 
-void RoboEye::makeImage()
+bool RoboEye::makeImage()
 {
 	if (!read())
-		return;
+		return false;
 
 	resize(frame, RGBimage, imgSize);
 
 	GaussianBlur(RGBimage, RGBimage, Size(5, 5), 0);
 	cvtColor(RGBimage, HSVimage, CV_BGR2HSV);
+
+	return true;
 }
 
 void RoboEye::showBorders()
 {
-	if( showFrame )
+	if (showFrame)
 		rectangle(RGBimage, frameBegin, frameEnd, Scalar(0, 0, 150), 3);
 }
 
-void RoboEye::centerMarking(GameObject &obj)
+void RoboEye::centerMarking()
 {
-	if( markCenter )
-		circle(RGBimage, obj.getPosition(), 6, Scalar( obj.getColor() ), -1);
+	if (markCenter) {
+		circle(RGBimage, ball.getPosition(), 6, Scalar(ball.getColor()), -1);
+		circle(RGBimage, robot.getPosition(), 6, Scalar(robot.getColor()), -1);
+	}
 }
 
-void RoboEye::reloadWindow()
+void RoboEye::updateWindow()
 {
 	imshow(NAMES.RGBIMG.name, RGBimage);
 	imshow(NAMES.HSVIMG.name, HSVimage);
 }
 
-void RoboEye::setMouseOnRGB( void (*callBack) (int event, int x, int y, int flags, void *userdata))
-{
-	setMouseCallback(NAMES.RGBIMG.name, callBack);
-}
-
-void RoboEye::makeControlBars(Arkanoid & robot)
+void RoboEye::makeControlBars()
 {
 	createTrackbar(NAMES.CONTROL.proportional, NAMES.CONTROL.name, &robot.RIDE_COEFFS.prop, 100, barBack);
 	createTrackbar(NAMES.CONTROL.cubic, NAMES.CONTROL.name, &robot.RIDE_COEFFS.cube, 100, barBack);
@@ -106,10 +110,99 @@ void RoboEye::switchBordersVisible()
 
 Color RoboEye::readHSV(Point pos)
 {
-	return HSVimage.at<Color>( pos );
+	return HSVimage.at<Color>(pos);
 }
 
 void RoboEye::writeRGB(Point pos, Color color)
 {
-	RGBimage.at<Color>(pos) = color;
+	if (highLightning)
+		RGBimage.at<Color>(pos) = color;
 }
+
+bool RoboEye::pixelCompare(GameObject & obj, Color pixel)
+{
+	return abs(obj.getColor()[0] - pixel[0]) < HSV.hueDiff &&
+		pixel[1] >= HSV.MIN.saturation &&
+		pixel[2] >= HSV.MIN.brigthness;
+}
+
+void RoboEye::createMouseCallBack()
+{
+	setMouseCallback(NAMES.RGBIMG.name,
+		[](int event, int x, int y, int flags, void* userdata) {
+
+		RoboEye* data = reinterpret_cast<RoboEye*>(userdata);
+
+		switch (event)
+		{
+		case EVENT_LBUTTONDOWN:
+			data->getRobotReference().setColor(data->readHSV(Point(x, y)));
+			break;
+
+		case EVENT_RBUTTONDOWN:
+			data->getBallReference().setColor(data->readHSV(Point(x, y)));
+			break;
+		}
+	}, (void*)this);
+}
+
+Point RoboEye::getBegin()
+{
+	return frameBegin;
+}
+
+Point RoboEye::getEnd()
+{
+	return frameEnd;
+}
+
+Arkanoid & RoboEye::getRobotReference()
+{
+	return robot;
+}
+
+GameObject & RoboEye::getBallReference()
+{
+	return ball;
+}
+
+void RoboEye::tie_metrical() {
+
+	thread([this]() {
+		double height = 0.0,
+			diameter = 0.0,
+			visionangle = 90.0;
+
+		Point cam = imgSize;
+		Point center = Point(cam.x / 2, cam.y / 2);
+
+		double density = visionangle / mod(cam);
+
+		cout << "enter the diameter of frame: ";
+		cin >> diameter;
+
+		double radius = diameter / 2;
+
+		height = radius / tan(rad(visionangle / 2));
+
+		metrical = [=](Point pos) -> Point2d {
+			pos.x -= cam.x / 2;
+			pos.y = cam.y / 2 - pos.y;
+
+			cout << pos << '\t';
+
+			double deltapix = mod(pos);
+
+			double angle = deltapix * density;
+			double deltametric = height * tan(rad(angle));
+
+			cout << angle << '\t' << deltametric << '\t';
+
+			return Point2d(deltametric * pos.x / deltapix, deltametric * pos.y / deltapix);
+		};
+
+	}).detach();
+
+}
+
+void barBack(int, void*) { }
