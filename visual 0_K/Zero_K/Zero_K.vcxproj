@@ -140,6 +140,7 @@
     <ClCompile Include="Arduino\motor.cpp" />
     <ClCompile Include="Arduino\wincom.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Lego\EV3.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>

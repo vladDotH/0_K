@@ -3,13 +3,9 @@
 int main()
 {
 	GameObject ball;
-	Arkanoid robot = ArduinoBot(1);
+	ArduinoBot robot(1);
 
 	RoboEye vision(robot, ball, 0);
-
-	//vision.makeControlBars();
-
-	//vision.createMouseCallBack(robot, ball);
 
 	while (true)
 	{

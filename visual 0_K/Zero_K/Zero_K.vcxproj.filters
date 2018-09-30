@@ -19,9 +19,6 @@
     <Filter Include="arduino">
       <UniqueIdentifier>{9e5a1b22-5d11-499a-b1a5-176386ba835e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="funcDrawer">
-      <UniqueIdentifier>{c102f941-4a62-40ea-a176-95b6a94a002d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="camera">
       <UniqueIdentifier>{7e364728-bc42-4671-b6de-d78547c0180b}</UniqueIdentifier>
     </Filter>
@@ -40,7 +37,10 @@
       <Filter>arduino</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>camera</Filter>
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Game.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -66,7 +66,7 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>camera</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
