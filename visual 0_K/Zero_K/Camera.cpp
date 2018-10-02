@@ -75,7 +75,8 @@ void RoboEye::centerMarking()
 {
 	if (markCenter) {
 		circle(RGBimage, ball.getPosition(), 6, Scalar(ball.getColor()), -1);
-		circle(RGBimage, robot.getPosition(), 6, Scalar(robot.getColor()), -1);
+		if (!findCorners)
+			circle(RGBimage, robot.getPosition(), 6, Scalar(robot.getColor()), -1);
 	}
 }
 
@@ -106,6 +107,16 @@ void RoboEye::switchMarking()
 void RoboEye::switchBordersVisible()
 {
 	showFrame = !showFrame;
+}
+
+void RoboEye::switchCornerFinding()
+{
+	findCorners = !findCorners;
+}
+
+bool RoboEye::getFindMode()
+{
+	return findCorners;
 }
 
 Color RoboEye::readHSV(Point pos)
@@ -203,6 +214,34 @@ void RoboEye::tie_metrical() {
 
 	}).detach();
 
+}
+
+Point RoboEye::findRobot()
+{
+	if (!findCorners)
+		return Point(0, 0);
+
+	cvtColor(RGBimage, Gray, CV_BGR2GRAY);
+
+	goodFeaturesToTrack(Gray, corners, max_corners, 0.01, 3, mask, 3, true, 0.04);
+
+	robot.refuse();
+
+	for (Point pos : corners) {
+		if (pos.x > frameBegin.x && pos.x < frameEnd.x &&
+			pos.y > frameBegin.y && pos.y < frameEnd.y)
+		{
+			circle(RGBimage, pos, 5, Scalar(0, 0, 0), -1);
+			robot.addpixel(pos.x, pos.y);
+		}
+	}
+
+	robot.detect();
+
+	if (markCenter)
+		circle(RGBimage, robot.getPosition(), 9, Scalar(255, 0, 0), -1);
+
+	return robot.getPosition();
 }
 
 void barBack(int, void*) { }

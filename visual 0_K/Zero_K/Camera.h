@@ -64,10 +64,17 @@ private:
 
 	bool highLightning = false,
 		markCenter = false,
-		showFrame = true;
+		showFrame = true,
+		findCorners = true;
 
 	Mat RGBimage,
-		HSVimage;
+		HSVimage,
+		Gray,
+		mask;
+
+	vector <Point2f> corners;
+
+	const int max_corners = 50;
 
 	struct {
 		struct {
@@ -100,6 +107,10 @@ private:
 				integral = "integral",
 				differencial = "differencial";
 		} CONTROL;
+
+		struct {
+			const string name = "gray";
+		} GRAY;
 	} NAMES;
 
 	GameObject &ball;
@@ -120,6 +131,9 @@ public:
 	void switchHL();
 	void switchMarking();
 	void switchBordersVisible();
+	void switchCornerFinding();
+
+	bool getFindMode();
 
 	Color readHSV(Point pos);
 	void writeRGB(Point pos, Color color);
@@ -134,6 +148,8 @@ public:
 	GameObject& getBallReference();
 
 	void tie_metrical();
+
+	Point findRobot();
 };
 
 void barBack(int, void*);

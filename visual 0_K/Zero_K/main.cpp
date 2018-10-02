@@ -14,13 +14,15 @@ int main()
 		robot.refuse();
 		ball.refuse();
 
+		vision.findRobot();
+
 		for (int w = vision.getBegin().x; w < vision.getEnd().x; w++)
 		{
 			for (int h = vision.getBegin().y; h < vision.getEnd().y; h++)
 			{
 				Color pixel = vision.readHSV(Point(w, h));
 
-				if (vision.pixelCompare(robot, pixel))
+				if ( !vision.getFindMode() && vision.pixelCompare(robot, pixel))
 				{
 					robot.addpixel(w, h);
 					vision.writeRGB(Point(w, h), Color(150, 20, 120));
@@ -38,9 +40,11 @@ int main()
 		robot.detect();
 		ball.detect();
 
+
 		vision.centerMarking();
 
 		vision.showBorders();
+
 
 		if (robot.getMode())
 		{
@@ -106,8 +110,68 @@ int main()
 			ball.setColor(Color(-999, -999, -999));
 		}
 
+		if (key == 'm')
+			vision.switchCornerFinding();
+
 
 	}
 
 	return 0;
 }
+
+//#include <opencv2/opencv.hpp>
+//using namespace std;
+//using namespace cv;
+//
+//int main()
+//{
+//	Mat image, grey, mask;
+//	VideoCapture cap(0);
+//	vector<Point2f> corners;
+//
+//	while (true) {
+//
+//		cap.read(image);
+//
+//		cvtColor(image, grey, CV_BGR2GRAY);
+//
+//		goodFeaturesToTrack(grey, corners, 50, 0.01, 3, mask, true, 0.04);
+//
+//		for (int i = 0; i < corners.size(); i++) {
+//			circle(grey, corners[i], 5, Scalar(0), -1);
+//		}
+//
+//		imshow("win", grey);
+//
+//		if (waitKey(1) != -1) break;
+//	}
+//}
+
+//#include <opencv2/opencv.hpp>
+//
+//using namespace cv;
+//using namespace std;
+//int main()
+//{
+//	VideoCapture cap(0);
+//	vector <Point2f> corners;
+//	Mat image, grey, mask;
+//
+//	while (true)
+//	{
+//		cap.read(image);
+//
+//		cvtColor(image, grey, CV_BGR2GRAY);
+//
+//		//goodFeaturesToTrack(grey, corners, 50, 0.01, 3, mask, 3, true, 0.04);
+//		goodFeaturesToTrack(grey, corners, 50, 0.01, 3, mask, 3, true, 0.04);
+//
+//		for (int i = 0; i < corners.size(); i++)
+//			cv::circle(grey, corners[i], 5, cv::Scalar(255), -1);
+//
+//		imshow("win", grey);
+//
+//		if (waitKey(1) != -1)
+//			break;
+//	}
+//}
