@@ -50,10 +50,10 @@ void Arkanoid::kick() {
 
 		kickTimer = clock();
 
-		hammerMove(100);
+		hammerMove(-100);
 		this_thread::sleep_for(chrono::milliseconds(200));
 
-		hammerMove(-100);
+		hammerMove(100);
 		this_thread::sleep_for(chrono::milliseconds(250));
 
 		hammerMove(0);
@@ -100,13 +100,13 @@ void LegoBot::connect(int port) {
 
 
 void ArduinoBot::hammerMove(int speed) {
-	//controller.motorStart(A, speed);
+	controller.motorStart(B, speed);
 }
 
-ArduinoBot::ArduinoBot(int port) /*: controller(winController(port))*/ { }
+ArduinoBot::ArduinoBot(int port) : controller(winController(port)) { }
 
 void ArduinoBot::move(int speed) {
-	//controller.motorStart(B, speed * DIRECTION);
+	controller.motorStart(A, speed * DIRECTION);
 }
 
 void ArduinoBot::connect(int port) { }

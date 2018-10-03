@@ -26,6 +26,8 @@ RoboEye::RoboEye(Arkanoid &robot, GameObject &ball,
 	frameBegin = Point(0, 0);
 	frameEnd = imgSize;
 
+	mask = Mat(cvSize(imgSize.x, imgSize.y), CV_8U);
+
 	namedWindow(NAMES.RGBIMG.name);
 	namedWindow(NAMES.HSVIMG.name);
 	namedWindow(NAMES.CONTROL.name);
@@ -88,10 +90,12 @@ void RoboEye::updateWindow()
 
 void RoboEye::makeControlBars()
 {
-	createTrackbar(NAMES.CONTROL.proportional, NAMES.CONTROL.name, &robot.RIDE_COEFFS.prop, 100, barBack);
+	createTrackbar(NAMES.CONTROL.proportional, NAMES.CONTROL.name, &robot.RIDE_COEFFS.prop, 500, barBack);
 	createTrackbar(NAMES.CONTROL.cubic, NAMES.CONTROL.name, &robot.RIDE_COEFFS.cube, 100, barBack);
 	createTrackbar(NAMES.CONTROL.integral, NAMES.CONTROL.name, &robot.RIDE_COEFFS.integral, 100, barBack);
 	createTrackbar(NAMES.CONTROL.differencial, NAMES.CONTROL.name, &robot.RIDE_COEFFS.differencial, 100, barBack);
+	createTrackbar(NAMES.CONTROL.kickRange, NAMES.CONTROL.name, &robot.CONTROL_VALUES.ballMinPixels, 50, barBack);
+	createTrackbar(NAMES.CONTROL.minBall, NAMES.CONTROL.name, &robot.CONTROL_VALUES.kickRange, 50, barBack);
 }
 
 void RoboEye::switchHL()
@@ -112,6 +116,11 @@ void RoboEye::switchBordersVisible()
 void RoboEye::switchCornerFinding()
 {
 	findCorners = !findCorners;
+}
+
+void RoboEye::switchCornerVisible()
+{
+	showCorners = !showCorners;
 }
 
 bool RoboEye::getFindMode()
@@ -221,6 +230,9 @@ Point RoboEye::findRobot()
 	if (!findCorners)
 		return Point(0, 0);
 
+	mask = Scalar(0);
+	rectangle(mask, frameBegin, frameEnd, Scalar(255), -1);
+
 	cvtColor(RGBimage, Gray, CV_BGR2GRAY);
 
 	goodFeaturesToTrack(Gray, corners, max_corners, 0.01, 3, mask, 3, true, 0.04);
@@ -231,8 +243,10 @@ Point RoboEye::findRobot()
 		if (pos.x > frameBegin.x && pos.x < frameEnd.x &&
 			pos.y > frameBegin.y && pos.y < frameEnd.y)
 		{
-			circle(RGBimage, pos, 5, Scalar(0, 0, 0), -1);
 			robot.addpixel(pos.x, pos.y);
+			
+			if (showCorners)
+				circle(RGBimage, pos, 5, Scalar(0, 0, 0), -1);
 		}
 	}
 

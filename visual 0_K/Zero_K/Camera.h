@@ -50,7 +50,7 @@ private:
 		frameEnd;
 
 	struct {
-		int hueDiff = 20;
+		int hueDiff = 6;
 		struct {
 			int saturation = 40,
 				brigthness = 40;
@@ -65,7 +65,8 @@ private:
 	bool highLightning = false,
 		markCenter = false,
 		showFrame = true,
-		findCorners = true;
+		findCorners = true,
+		showCorners = true;
 
 	Mat RGBimage,
 		HSVimage,
@@ -105,7 +106,9 @@ private:
 			const string proportional = "proportional",
 				cubic = "cubic",
 				integral = "integral",
-				differencial = "differencial";
+				differencial = "differencial",
+				minBall = "min ball pixels",
+				kickRange = "kick range";
 		} CONTROL;
 
 		struct {
@@ -132,6 +135,7 @@ public:
 	void switchMarking();
 	void switchBordersVisible();
 	void switchCornerFinding();
+	void switchCornerVisible();
 
 	bool getFindMode();
 

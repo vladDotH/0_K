@@ -31,7 +31,7 @@ public:
 class Arkanoid : public GameObject {
 private:
     time_t kickTimer;
-    bool handControl;
+    bool handControl = true;
 
 
 protected:
@@ -87,7 +87,7 @@ public:
 
 class ArduinoBot : public Arkanoid {
 private:
-    //winController controller;
+    winController controller;
 
 protected:
 	void hammerMove(int speed) override;
