@@ -26,10 +26,13 @@ RoboEye::RoboEye(Arkanoid &robot, GameObject &ball,
 	frameBegin = Point(0, 0);
 	frameEnd = imgSize;
 
-	mask = Mat(cvSize(imgSize.x, imgSize.y), CV_8U);
+	robotAreaBegin = Point(0, 0);
+	robotAreaEnd = imgSize;
+
+	mask = Mat(cvSize(imgSize.x, imgSize.y), CV_8UC1);
 
 	namedWindow(NAMES.RGBIMG.name);
-	namedWindow(NAMES.HSVIMG.name);
+	//namedWindow(NAMES.HSVIMG.name);
 	namedWindow(NAMES.CONTROL.name);
 
 	namedWindow(NAMES.COLORS.name);
@@ -37,11 +40,23 @@ RoboEye::RoboEye(Arkanoid &robot, GameObject &ball,
 	createTrackbar(NAMES.COLORS.saturation, NAMES.COLORS.name, &HSV.MIN.saturation, 255, barBack);
 	createTrackbar(NAMES.COLORS.brightness, NAMES.COLORS.name, &HSV.MIN.brigthness, 255, barBack);
 
-	namedWindow(NAMES.BORDERS.name);
+	namedWindow(NAMES.BORDERS.name, CV_WINDOW_AUTOSIZE);
 	createTrackbar(NAMES.BORDERS.high, NAMES.BORDERS.name, &frameBegin.y, imgSize.y, barBack);
 	createTrackbar(NAMES.BORDERS.left, NAMES.BORDERS.name, &frameBegin.x, imgSize.x, barBack);
 	createTrackbar(NAMES.BORDERS.down, NAMES.BORDERS.name, &frameEnd.y, imgSize.y, barBack);
 	createTrackbar(NAMES.BORDERS.right, NAMES.BORDERS.name, &frameEnd.x, imgSize.x, barBack);
+
+	namedWindow(NAMES.ROBOTMASK.name);
+	createTrackbar(NAMES.ROBOTMASK.robotHigh, NAMES.ROBOTMASK.name, &robotAreaBegin.y, imgSize.y, barBack);
+	createTrackbar(NAMES.ROBOTMASK.robotLeft, NAMES.ROBOTMASK.name, &robotAreaBegin.x, imgSize.x, barBack);
+	createTrackbar(NAMES.ROBOTMASK.robotDown, NAMES.ROBOTMASK.name, &robotAreaEnd.y, imgSize.y, barBack);
+	createTrackbar(NAMES.ROBOTMASK.robotRight, NAMES.ROBOTMASK.name, &robotAreaEnd.x, imgSize.x, barBack);
+
+	namedWindow(NAMES.CORNERS.name);
+	createTrackbar(NAMES.CORNERS.maxCorners, NAMES.CORNERS.name, &max_corners, 100, barBack);
+	createTrackbar(NAMES.CORNERS.quality, NAMES.CORNERS.name, &quality, 100, barBack);
+	createTrackbar(NAMES.CORNERS.minDistanse, NAMES.CORNERS.name, &minDistanse, 100, barBack);
+	createTrackbar(NAMES.CORNERS.blockSize, NAMES.CORNERS.name, &blockSize, 100, barBack);
 
 	makeControlBars();
 	createMouseCallBack();
@@ -69,8 +84,10 @@ bool RoboEye::makeImage()
 
 void RoboEye::showBorders()
 {
-	if (showFrame)
+	if (showFrame) {
 		rectangle(RGBimage, frameBegin, frameEnd, Scalar(0, 0, 150), 3);
+		rectangle(RGBimage, robotAreaBegin, robotAreaEnd, Scalar(120, 0, 150), 3);
+	}
 }
 
 void RoboEye::centerMarking()
@@ -85,7 +102,7 @@ void RoboEye::centerMarking()
 void RoboEye::updateWindow()
 {
 	imshow(NAMES.RGBIMG.name, RGBimage);
-	imshow(NAMES.HSVIMG.name, HSVimage);
+	//imshow(NAMES.HSVIMG.name, HSVimage);
 }
 
 void RoboEye::makeControlBars()
@@ -94,8 +111,8 @@ void RoboEye::makeControlBars()
 	createTrackbar(NAMES.CONTROL.cubic, NAMES.CONTROL.name, &robot.RIDE_COEFFS.cube, 100, barBack);
 	createTrackbar(NAMES.CONTROL.integral, NAMES.CONTROL.name, &robot.RIDE_COEFFS.integral, 100, barBack);
 	createTrackbar(NAMES.CONTROL.differencial, NAMES.CONTROL.name, &robot.RIDE_COEFFS.differencial, 100, barBack);
-	createTrackbar(NAMES.CONTROL.kickRange, NAMES.CONTROL.name, &robot.CONTROL_VALUES.ballMinPixels, 50, barBack);
-	createTrackbar(NAMES.CONTROL.minBall, NAMES.CONTROL.name, &robot.CONTROL_VALUES.kickRange, 50, barBack);
+	createTrackbar(NAMES.CONTROL.minBall, NAMES.CONTROL.name, &robot.CONTROL_VALUES.ballMinPixels, 50, barBack);
+	createTrackbar(NAMES.CONTROL.kickRange, NAMES.CONTROL.name, &robot.CONTROL_VALUES.kickRange, 50, barBack);
 }
 
 void RoboEye::switchHL()
@@ -123,9 +140,19 @@ void RoboEye::switchCornerVisible()
 	showCorners = !showCorners;
 }
 
+void RoboEye::switchMetricalUsing()
+{
+	useMetrical = !useMetrical;
+}
+
 bool RoboEye::getFindMode()
 {
 	return findCorners;
+}
+
+bool RoboEye::getMetUsing()
+{
+	return useMetrical;
 }
 
 Color RoboEye::readHSV(Point pos)
@@ -231,23 +258,21 @@ Point RoboEye::findRobot()
 		return Point(0, 0);
 
 	mask = Scalar(0);
-	rectangle(mask, frameBegin, frameEnd, Scalar(255), -1);
+	rectangle(mask, robotAreaBegin, robotAreaEnd, Scalar(255), -1);
 
 	cvtColor(RGBimage, Gray, CV_BGR2GRAY);
 
-	goodFeaturesToTrack(Gray, corners, max_corners, 0.01, 3, mask, 3, true, 0.04);
+	goodFeaturesToTrack(Gray, corners, max_corners, (double)quality/100, minDistanse, mask, blockSize, true, 0.04);
 
 	robot.refuse();
 
 	for (Point pos : corners) {
-		if (pos.x > frameBegin.x && pos.x < frameEnd.x &&
-			pos.y > frameBegin.y && pos.y < frameEnd.y)
-		{
-			robot.addpixel(pos.x, pos.y);
-			
-			if (showCorners)
-				circle(RGBimage, pos, 5, Scalar(0, 0, 0), -1);
-		}
+
+		robot.addpixel(pos.x, pos.y);
+
+		if (showCorners)
+			circle(RGBimage, pos, 5, Scalar(0, 88, 0), -1);
+
 	}
 
 	robot.detect();

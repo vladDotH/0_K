@@ -47,7 +47,9 @@ class RoboEye : public Camera, public MathModule {
 private:
 	Point imgSize,
 		frameBegin,
-		frameEnd;
+		frameEnd,
+		robotAreaBegin,
+		robotAreaEnd;
 
 	struct {
 		int hueDiff = 6;
@@ -66,7 +68,8 @@ private:
 		markCenter = false,
 		showFrame = true,
 		findCorners = true,
-		showCorners = true;
+		showCorners = true,
+		useMetrical = false;
 
 	Mat RGBimage,
 		HSVimage,
@@ -75,7 +78,10 @@ private:
 
 	vector <Point2f> corners;
 
-	const int max_corners = 50;
+	int max_corners = 50,
+		quality = 3, //divide by 100
+		minDistanse = 6,
+		blockSize = 3;
 
 	struct {
 		struct {
@@ -85,6 +91,10 @@ private:
 		struct {
 			const string name = "hsv";
 		} HSVIMG;
+
+		struct {
+			const string name = "gray";
+		} GRAY;
 
 		struct {
 			const string name = "color detecting";
@@ -102,6 +112,14 @@ private:
 		} BORDERS;
 
 		struct {
+			const string name = "robot mask";
+			const string robotHigh = "robot high",
+				robotDown = "robot down",
+				robotLeft = "robot left",
+				robotRight = "robot right";
+		} ROBOTMASK;
+
+		struct {
 			const string name = "robot control";
 			const string proportional = "proportional",
 				cubic = "cubic",
@@ -112,8 +130,14 @@ private:
 		} CONTROL;
 
 		struct {
-			const string name = "gray";
-		} GRAY;
+			const string name = "corners";
+			const string maxCorners = "max corners",
+				quality = "quality level",
+				minDistanse = "min dist.",
+				blockSize = "block size";
+
+		} CORNERS;
+
 	} NAMES;
 
 	GameObject &ball;
@@ -136,8 +160,10 @@ public:
 	void switchBordersVisible();
 	void switchCornerFinding();
 	void switchCornerVisible();
+	void switchMetricalUsing();
 
 	bool getFindMode();
+	bool getMetUsing();
 
 	Color readHSV(Point pos);
 	void writeRGB(Point pos, Color color);

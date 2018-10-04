@@ -7,6 +7,7 @@
 #include <chrono>
 #include <thread>
 #include <functional>
+#include <vector>
 
 #include "Lego/EV3.hpp"
 #include "Arduino/wincom.h"

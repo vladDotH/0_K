@@ -43,7 +43,6 @@ int main()
 
 		ball.detect();
 
-
 		vision.centerMarking();
 
 		vision.showBorders();
@@ -62,24 +61,38 @@ int main()
 
 		else
 		{
-			if (ball.getCounter() > robot.CONTROL_VALUES.ballMinPixels) {
+			if (ball.getCounter() > robot.CONTROL_VALUES.ballMinPixels)
+				robot.move(0);
+			else {
+				if (!vision.getMetUsing()) {
 
-				Point2d difference = robot.getPosition() - ball.getPosition();
+					Point2d difference = robot.getPosition() - ball.getPosition();
 
-				if (abs(difference.y) < robot.CONTROL_VALUES.kickRange)
-					robot.kick();
+					if (abs(difference.y) < robot.CONTROL_VALUES.kickRange)
+						robot.kick();
 
-				int speed = difference.x * robot.RIDE_COEFFS.prop / 100
-					+ pow(difference.x, 3) * robot.RIDE_COEFFS.cube / 100
-					+ robot.CONTROL_VALUES.integralValue * robot.RIDE_COEFFS.integral / 100;
+					//cout << abs(difference.y) << "KICK R " << robot.CONTROL_VALUES.kickRange << endl;
 
-				cout << "R" << robot.getPosition() << " B" << ball.getPosition() << endl;
+					float speed = (float)difference.x * (float)robot.RIDE_COEFFS.prop / (float)100
+						+ pow(difference.x, 3) * (float)robot.RIDE_COEFFS.cube / (float)1000
+						+ (float)robot.CONTROL_VALUES.integralValue * (float)robot.RIDE_COEFFS.integral / (float)100;
 
-				robot.move(speed);
+					//cout << "R" << robot.getPosition() << " B" << ball.getPosition() << endl;
 
-				if (robot.CONTROL_VALUES.integralValue * difference.x < 0)
-					robot.CONTROL_VALUES.integralValue += difference.x;
+					robot.move(speed);
 
+					if (robot.CONTROL_VALUES.integralValue * difference.x < 0)
+						robot.CONTROL_VALUES.integralValue += difference.x;
+				}
+				else {
+					Point2d difference = vision.metricalTransform(robot.getPosition()) - vision.metricalTransform(ball.getPosition());
+					if (abs(difference.y) < robot.CONTROL_VALUES.kickRange)
+						robot.kick();
+
+					float speed = (float)difference.x * (float)robot.RIDE_COEFFS.prop / (float)100;
+
+					robot.move(speed);
+				}
 			}
 		}
 
