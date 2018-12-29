@@ -3,7 +3,10 @@
 ################################################################################
 
 /.vs
-/visual 0_K/Zero_K/x64
-/visual 0_K/x64
-/visual 0_K/.vs/Zero_K/v15
-/visual 0_K/Zero_K/visualFunction
+/zeroK-1.1/x86
+/zeroK-1.1/Zero_K/Zero_K.vcxproj.user
+/zeroK-1.1/Zero_K/Zero_K.vcxproj.filters
+/zeroK-1.1/Zero_K/Zero_K.vcxproj
+/zeroK-1.1/Zero_K/Zero_K.h
+/zeroK-1.1/Zero_K/Arduino/motor.cpp
+/zeroK-1.1/Zero_K.sln
