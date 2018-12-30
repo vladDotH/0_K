@@ -1,4 +1,4 @@
-package ZeroKGUI;
+package ZeroK.GUI;
 
 abstract public class View {
     protected String name;

@@ -1,4 +1,4 @@
-package ZeroKGUI;
+package ZeroK.GUI;
 
 import org.opencv.core.*;
 import org.opencv.core.Point;

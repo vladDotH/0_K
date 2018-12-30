@@ -1,4 +1,4 @@
-package ZeroKGUI;
+package ZeroK.GUI;
 
 import org.opencv.core.Mat;
 
@@ -10,10 +10,10 @@ public class Example {
 
         Window win = new Window("window");
 
-        Button btn = new ZeroKGUI.Button("button");
+        Button btn = new Button("button");
 
         final boolean[] exit = {false};
-        btn.setOnClickListener( e -> {
+        btn.setOnClickListener((e) -> {
             exit[0] = true;
         });
 

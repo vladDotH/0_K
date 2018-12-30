@@ -1,4 +1,4 @@
-package ZeroKGUI;
+package ZeroK.GUI;
 
 import javax.swing.*;
 import java.awt.*;
