@@ -5,27 +5,28 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
+
 public class Slider extends View {
 
     private JSlider slider;
-    private final JLabel sliderName;
+    private final Label sliderName;
 
     public Slider(String name, int min, int max, int init) {
         this.name = name;
 
-        sliderName = new JLabel(name + " : " + init, JLabel.CENTER);
-        sliderName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        sliderName = new Label(name);
+        sliderName.setMessage(Integer.toString(init));
 
         slider = new JSlider(JSlider.HORIZONTAL,
                 min, max, init);
 
-//        slider.setMajorTickSpacing((max - min) / 10);
         slider.setMinorTickSpacing((max - min) / 10);
         slider.setPaintTicks(true);
-//        slider.setPaintLabels(true);
+
+        setChangeListener( (e -> {}) );
     }
 
-    public JLabel getLabel(){
+    public Label getLabel(){
         return sliderName;
     }
 
@@ -34,7 +35,7 @@ public class Slider extends View {
             @Override
             public void stateChanged(ChangeEvent e) {
                 listener.stateChanged(e);
-                sliderName.setText(name + " : " + slider.getValue());
+                sliderName.setMessage( "" + slider.getValue());
             }
         });
     }
@@ -44,7 +45,7 @@ public class Slider extends View {
     }
 
     @Override
-    protected Object getJComponent() {
+    protected Component getJComponent() {
         return slider;
     }
 }
