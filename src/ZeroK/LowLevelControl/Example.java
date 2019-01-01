@@ -15,20 +15,20 @@ public class Example {
         Scanner cin = new Scanner(System.in);
 
         char input = '0';
-        while( input != 'q' ){
+        while (input != 'q') {
             input = cin.next().charAt(0);
 
-            if( input == 'w' ){
+            if (input == 'w') {
                 ard.digitalWrite(7, Arduino.Mode.HIGH);
                 ard.analogWrite(6, 50);
             }
 
-            if( input == 'd' ){
+            if (input == 'd') {
                 ard.digitalWrite(7, Arduino.Mode.LOW);
                 ard.analogWrite(6, 50);
             }
 
-            if( input == 's' ){
+            if (input == 's') {
                 ard.digitalWrite(7, Arduino.Mode.LOW);
                 ard.analogWrite(6, 0);
             }

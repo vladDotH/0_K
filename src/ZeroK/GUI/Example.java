@@ -55,6 +55,9 @@ public class Example {
         statWin.addView(new Label("Antoher lable"));
         statWin.addView(new Button("buttonnnn"));
 
+        CheckBox box = new CheckBox("checker");
+        statWin.addView(box);
+
         statWin.start();
 
 
@@ -73,6 +76,8 @@ public class Example {
                 System.out.println(fps);
                 fps = 0;
                 startTime = System.currentTimeMillis();
+
+                System.out.println(box.getState());
             }
 
             fps++;

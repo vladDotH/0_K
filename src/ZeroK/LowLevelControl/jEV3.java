@@ -117,9 +117,9 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
         this.left.start();
         this.right.start();
 
-        if( left == 0 )
+        if (left == 0)
             this.left.stopFloat();
-        if( right == 0 )
+        if (right == 0)
             this.right.stopFloat();
     }
 
