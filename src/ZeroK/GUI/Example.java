@@ -79,7 +79,6 @@ public class Example {
 
                 System.out.println(box.getState());
             }
-
             fps++;
         }
 
