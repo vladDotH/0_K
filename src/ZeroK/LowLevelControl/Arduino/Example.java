@@ -1,8 +1,8 @@
-package ZeroK.LowLevelControl;
+package ZeroK.LowLevelControl.Arduino;
 
+import ZeroK.LowLevelControl.Arduino.Arduino;
 import jssc.*;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Example {
