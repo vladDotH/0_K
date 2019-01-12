@@ -12,7 +12,12 @@ public class Camera {
         capture = new VideoCapture(port);
     }
 
-    boolean read(){
-        return  capture.read(frame);
+    public boolean read() {
+        return capture.read(frame);
+    }
+
+    public void close() {
+        frame.release();
+        capture.release();
     }
 }

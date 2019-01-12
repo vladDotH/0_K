@@ -15,6 +15,7 @@ public class FrameMaker extends Camera {
     public FrameMaker(int port, Size frameSize, Size blurSize) {
         super(port);
         this.frameSize = frameSize;
+        this.blurSize = blurSize;
 
         capture.set(Videoio.CAP_PROP_FRAME_WIDTH, frameSize.width);
         capture.set(Videoio.CAP_PROP_FRAME_HEIGHT, frameSize.height);

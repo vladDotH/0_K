@@ -79,20 +79,6 @@ public class ArduinoBot extends Bot {
         }
     }
 
-    @Override
-    public void switchMode() {
-        automate = !automate;
-    }
-
-    @Override
-    public boolean getMode() {
-        return automate;
-    }
-
-    @Override
-    public void switchDirection() {
-        direction = (direction * (-1));
-    }
 
     @Override
     public void connect(String port) {

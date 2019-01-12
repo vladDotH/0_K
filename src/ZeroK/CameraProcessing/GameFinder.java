@@ -12,11 +12,16 @@ public class GameFinder extends FrameMaker {
             minBrightness = 20;
 
     protected double cornerQuality = 0.03;
-    protected int maxCorners = 50, minDistance = 6;
+    protected int maxCorners = 50,
+            minDistance = 6,
+            blockSize = 3;
 
     protected Mat binaryImg = new Mat();
 
-    protected boolean markCenters = true, markCorners = true;
+    protected boolean markCenters = true,
+            markCorners = true,
+            showFps = false,
+            showRoi = false;
 
     public GameFinder(int port, Size frameSize, Size blurSize) {
         super(port, frameSize, blurSize);
@@ -32,33 +37,41 @@ public class GameFinder extends FrameMaker {
 
     public void findByCorners(GameObject object) {
         MatOfPoint corners = new MatOfPoint();
-        Imgproc.goodFeaturesToTrack(grayImg, corners, maxCorners, cornerQuality, minDistance);
+
+        Mat mask = Mat.zeros(frameSize, CvType.CV_8UC1);
+
+        Imgproc.rectangle(mask, object.roi.getRoi(), new Scalar(255), -1);
+
+        Imgproc.goodFeaturesToTrack(grayImg, corners, maxCorners, cornerQuality, minDistance, mask, blockSize, true, 0.04);
 
         if (markCorners)
             object.detect(corners, rgbImg);
         else object.detect(corners);
-
-        if (markCenters) {
-            Imgproc.circle(rgbImg, object.getPos(), 5, object.getColor(), -1);
-        }
     }
 
     public void findByColor(GameObject object) {
         Scalar low = new Scalar(object.getColor().val[0] - hueDispersion,
                 minSaturation, minBrightness);
         Scalar high = new Scalar(object.getColor().val[0] + hueDispersion,
-                minSaturation, minBrightness);
+                255, 255);
 
         Core.inRange(hsvImg, low, high, binaryImg);
 
-        object.detect(Imgproc.moments(binaryImg));
+        Mat mask = new Mat(frameSize, CvType.CV_8UC1, new Scalar(255));
 
-        if (markCenters) {
-            Imgproc.circle(rgbImg, object.getPos(), 5, object.getColor(), -1);
-        }
+        Imgproc.rectangle(mask, object.roi.getRoi(), new Scalar(0), -1);
+
+        Core.subtract(binaryImg, mask, binaryImg);
+
+        object.detect(Imgproc.moments(binaryImg));
     }
 
     public void markObject(GameObject object) {
         Imgproc.circle(rgbImg, object.getPos(), 5, object.getColor(), -1);
     }
+
+    public void showRoi(GameObject object) {
+        Imgproc.rectangle(rgbImg, object.roi.getRoi(), object.getColor(), 2);
+    }
 }
+

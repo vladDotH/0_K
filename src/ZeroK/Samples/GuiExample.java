@@ -1,5 +1,6 @@
-package ZeroK.GUI;
+package ZeroK.Samples;
 
+import ZeroK.GUI.*;
 import org.opencv.core.Mat;
 
 import org.opencv.core.*;
@@ -8,7 +9,7 @@ import org.opencv.videoio.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class Example {
+public class GuiExample {
     public static void main(String[] args) throws InterruptedException {
 
         final boolean[] exit = {false};

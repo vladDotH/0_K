@@ -98,13 +98,14 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
             ev3.addEventListener(this, SerialPort.MASK_RXCHAR);
 
             Thread.sleep(50);
+
+            System.out.println("Ev3 at port " + portName + " connected");
+
         } catch (SerialPortException ex) {
             System.out.println(ex);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Ev3 at port " + portName + " connected");
     }
 
     public void setLR(Motor left, Motor right) {
