@@ -241,7 +241,7 @@ public class Game extends GameFinder {
 
         botY2 = new Slider("bot - y2", 0, (int) frameSize.height, (int) bot.roi.getDot2().y);
         botY2.setChangeListener(changeEvent ->
-                bot.roi.setDot2(new Point(bot.roi.getDot2().x, botY1.getValue())));
+                bot.roi.setDot2(new Point(bot.roi.getDot2().x, botY2.getValue())));
 
         ballX1 = new Slider("ball - x1", 0, (int) frameSize.width, (int) ball.roi.getDot1().x);
         ballX1.setChangeListener(changeEvent ->
