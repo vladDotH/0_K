@@ -1,4 +1,4 @@
-package ZeroK.LowLevelControl;
+package ZeroK.LowLevelControl.Lego;
 
 import jssc.*;
 
@@ -42,7 +42,7 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
         private byte speed = 0;
         private boolean active = false;
 
-        public Motor(int code) {
+        private Motor(int code) {
             this.code = (byte) code;
         }
 
@@ -97,7 +97,10 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
 
             ev3.addEventListener(this, SerialPort.MASK_RXCHAR);
 
-            Thread.sleep(1000);
+            Thread.sleep(50);
+
+            System.out.println("Ev3 at port " + portName + " connected");
+
         } catch (SerialPortException ex) {
             System.out.println(ex);
         } catch (InterruptedException e) {
@@ -191,7 +194,11 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
     }
 
     @Override
-    public void close() throws Exception {
-        ev3.closePort();
+    public void close() {
+        try {
+            ev3.closePort();
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
     }
 }

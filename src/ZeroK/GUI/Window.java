@@ -17,6 +17,7 @@ public class Window extends View {
         frame.setBackground(Color.WHITE);
 
         frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.PAGE_AXIS));
+        frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         frame.setFocusable(true);
     }
@@ -27,16 +28,20 @@ public class Window extends View {
         frame.setVisible(true);
     }
 
-    public void addView(View view) {
+    public Window addView(View view) {
         frame.add((Component) view.getJComponent());
         views.add(view);
+
+        return this;
     }
 
-    public void addView(Slider view) {
+    public Window addView(Slider view) {
         this.addView((View) view.getLabel());
         frame.add((Component) view.getJComponent());
 
         views.add(view);
+
+        return this;
     }
 
     public void setKeyListener(KeyListener listener) {

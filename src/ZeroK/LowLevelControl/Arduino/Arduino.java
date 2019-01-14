@@ -1,6 +1,7 @@
-package ZeroK.LowLevelControl;
+package ZeroK.LowLevelControl.Arduino;
 
 import jssc.*;
+import org.opencv.core.CvType;
 
 import java.util.*;
 
@@ -10,7 +11,6 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
     public Arduino(String portName) {
         port = new SerialPort(portName);
-
         try {
             port.openPort();
 
@@ -25,10 +25,8 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.addEventListener(this, SerialPort.MASK_RXCHAR);
 
             Thread.sleep(2000);
-        } catch (SerialPortException ex) {
-            System.out.println(ex);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
         }
 
     }
@@ -41,10 +39,8 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
             Thread.sleep(1);
 
-        } catch (SerialPortException ex) {
-            System.out.println(ex);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -56,10 +52,48 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
             Thread.sleep(1);
 
-        } catch (SerialPortException ex) {
-            System.out.println(ex);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void servoStart(int pin, int degree){
+        try {
+            port.writeByte((byte) Mode.SERVO.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) degree);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void pinMode(int pin, Mode mode){
+        try {
+            port.writeByte((byte) Mode.PIN_MODE.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) mode.ordinal());
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Deprecated
+    public void sonicRead(int trig, int echo){
+        try {
+            port.writeByte((byte) Mode.US_GET.ordinal());
+            port.writeByte((byte) trig);
+            port.writeByte((byte) echo);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -72,10 +106,8 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
                 System.out.println(Arrays.toString(data));
 
                 Thread.sleep(1);
-            } catch (SerialPortException ex) {
-                System.out.println(ex);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (SerialPortException | InterruptedException ex) {
+                ex.printStackTrace();
             }
         }
     }
@@ -85,16 +117,25 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         try {
             port.closePort();
         } catch (SerialPortException ex){
-            System.out.println(ex);
+            ex.printStackTrace();
         }
     }
 
 
-    static enum Mode {
+    public static enum Mode {
         LOW,
         HIGH,
 
         DIGITAL,
-        ANALOG
+        ANALOG,
+
+        PIN_MODE,
+        OUT,
+        IN,
+
+        @Deprecated
+        US_GET,
+
+        SERVO
     }
 }

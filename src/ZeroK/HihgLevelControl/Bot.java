@@ -1,15 +1,40 @@
 package ZeroK.HihgLevelControl;
 
-public interface Bot {
-    void move(int speed);
+public abstract class Bot extends GameObject {
+    abstract public void move(int speed);
 
-    void kick();
-    void hammerMove(int speed);
+    abstract public void kick();
 
-    void switchMode();
-    boolean getMode();
+    abstract public void hammerMove(int speed);
 
-    void switchDirection();
+    abstract public void connect(String port);
 
-    boolean connect();
+    abstract public void close();
+
+    public boolean getMode() {
+        return automate;
+    }
+
+    public void switchMode(){
+        automate = !automate;
+        this.move(0);
+    }
+
+    public void switchDirection(){
+        direction = -direction;
+    }
+
+    public int getDirection(){
+        return direction;
+    }
+
+    protected int upTime = 500, downTime = 600;
+    protected boolean automate = true;
+    protected int direction = 1;
+
+    protected static class Coef {
+        int prop, cube, diff, intg;
+    }
+
+    protected boolean kickLock = false;
 }
