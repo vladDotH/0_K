@@ -101,10 +101,8 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
 
             System.out.println("Ev3 at port " + portName + " connected");
 
-        } catch (SerialPortException ex) {
-            System.out.println(ex);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
         }
     }
 

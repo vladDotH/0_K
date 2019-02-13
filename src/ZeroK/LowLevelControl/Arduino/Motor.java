@@ -1,7 +1,7 @@
 package ZeroK.LowLevelControl.Arduino;
 
 public class Motor implements Moveable{
-    private Arduino controller;
+    protected Arduino controller;
 
     private int speedPin, dirPin;
     private int speed;

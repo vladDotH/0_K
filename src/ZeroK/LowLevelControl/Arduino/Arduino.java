@@ -1,7 +1,6 @@
 package ZeroK.LowLevelControl.Arduino;
 
 import jssc.*;
-import org.opencv.core.CvType;
 
 import java.util.*;
 

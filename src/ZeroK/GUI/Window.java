@@ -8,6 +8,8 @@ import java.util.HashSet;
 
 public class Window extends View {
 
+    private static int xPos = 160, yPos = 160;
+
     private JFrame frame;
     private HashSet<View> views = new HashSet<>();
 
@@ -24,8 +26,17 @@ public class Window extends View {
 
     public void start() {
         frame.pack();
-        frame.setLocationRelativeTo(null);
+        frame.setLocation(new Point(xPos, yPos));
         frame.setVisible(true);
+
+        xPos += frame.getWidth() + 50;
+
+        if( xPos >= 1000 ){
+            xPos = 160;
+
+            yPos += frame.getHeight() + 50;
+        }
+
     }
 
     public Window addView(View view) {

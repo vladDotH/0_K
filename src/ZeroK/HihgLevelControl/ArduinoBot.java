@@ -1,7 +1,6 @@
 package ZeroK.HihgLevelControl;
 
 import ZeroK.LowLevelControl.Arduino.Arduino;
-import ZeroK.LowLevelControl.Arduino.Motor;
 import ZeroK.LowLevelControl.Arduino.Moveable;
 
 import java.util.ArrayList;

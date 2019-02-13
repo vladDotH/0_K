@@ -1,11 +1,11 @@
-package ZeroK.LowLevelControl.Arduino;
+package ZeroK.Samples;
 
 import ZeroK.LowLevelControl.Arduino.Arduino;
 import jssc.*;
 
 import java.util.Scanner;
 
-public class Example {
+public class ArduinoExample {
 
     private static SerialPort serialPort;
 

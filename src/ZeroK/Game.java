@@ -48,6 +48,7 @@ public class Game extends GameFinder {
 
     private Window robotSetting;
     private Slider propCoef, kickRange, minBallPixels;
+    private CheckBox automate;
     private Button direction;
 
     private Window imgSetting;
@@ -62,7 +63,7 @@ public class Game extends GameFinder {
     private boolean gameProcess = true;
 
     public void startGame() {
-        init();
+        GUIinit();
 
         int fps = 0;
         long time = System.currentTimeMillis();
@@ -73,6 +74,9 @@ public class Game extends GameFinder {
 
             findByColor(ball);
             findByCorners(bot);
+
+            if (bot.getMode())
+                bot.react(ball);
 
             if (markCenters) {
                 markObject(ball);
@@ -109,7 +113,7 @@ public class Game extends GameFinder {
         binMat.update(binaryImg);
     }
 
-    private void init() {
+    private void GUIinit() {
         ball = new GameObject();
         bot = new LegoBot("/dev/rfcomm0");
         bot.setColor(new Scalar(0, 255, 0));
@@ -139,8 +143,24 @@ public class Game extends GameFinder {
             @Override
             public void keyPressed(KeyEvent e) {
                 super.keyPressed(e);
-                if (e.getKeyChar() == 'q')
+
+                if (e.getKeyChar() == 'q') {
                     gameProcess = false;
+                }
+
+                if (!bot.getMode()) {
+                    switch (e.getKeyChar()) {
+                        case KeyEvent.VK_LEFT:
+                            bot.move(100);
+                            break;
+                        case KeyEvent.VK_RIGHT:
+                            bot.move(-100);
+                            break;
+                        case KeyEvent.VK_DOWN:
+                            bot.kick();
+                            break;
+                    }
+                }
             }
         });
 
@@ -215,11 +235,20 @@ public class Game extends GameFinder {
             direction.setMessage(String.valueOf(bot.getDirection()));
         });
 
-        propCoef = new Slider("proportional coefficient", 0, 1000, 20);
-        kickRange = new Slider("kick range", 0, 60, 30);
-        minBallPixels = new Slider("min ball pixels", 0, 100, 20);
+        propCoef = new Slider("proportional coefficient", 0, 1000, bot.coefs.prop);
+        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue());
+
+        kickRange = new Slider("kick range", 0, 60, bot.getKickRange());
+        kickRange.setChangeListener(changeEvent -> bot.setKickRange(kickRange.getValue()));
+
+        minBallPixels = new Slider("min ball pixels", 0, 100, bot.getMinBallPixels());
+        minBallPixels.setChangeListener(changeEvent -> bot.setMinBallPixels(minBallPixels.getValue()));
+
+        automate = new CheckBox("autoplay", bot.getMode());
+        automate.setActionListener(actionEvent -> bot.switchMode());
 
         robotSetting.addView(direction)
+                .addView(automate)
                 .addView(propCoef)
                 .addView(kickRange)
                 .addView(minBallPixels);

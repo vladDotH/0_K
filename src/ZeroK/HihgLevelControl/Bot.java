@@ -15,26 +15,68 @@ public abstract class Bot extends GameObject {
         return automate;
     }
 
-    public void switchMode(){
+    public void switchMode() {
         automate = !automate;
         this.move(0);
     }
 
-    public void switchDirection(){
+    public void switchDirection() {
         direction = -direction;
     }
 
-    public int getDirection(){
+    public int getDirection() {
         return direction;
     }
+
+    public void react(GameObject ball) {
+        if( ball.getArea() < minBallPixels ) {
+            move(0);
+            return;
+        }
+
+        double delY = Math.abs(ball.getPos().y - this.getPos().y);
+
+        if( delY < kickRange )
+            kick();
+
+        double delX = Math.abs(ball.getPos().x - this.getPos().x);
+
+        double speed = delX * coefs.prop
+                + Math.pow(delX, 3) * coefs.cube;
+
+
+        move((int) speed);
+    }
+
+    protected int kickRange = 30;
 
     protected int upTime = 500, downTime = 600;
     protected boolean automate = true;
     protected int direction = 1;
-
-    protected static class Coef {
-        int prop, cube, diff, intg;
-    }
+    protected int minBallPixels = 30;
 
     protected boolean kickLock = false;
+
+    public final Coefs coefs = new Coefs();
+
+    public int getKickRange() {
+        return kickRange;
+    }
+
+    public void setKickRange(int kickRange) {
+        this.kickRange = kickRange;
+    }
+
+    public int getMinBallPixels() {
+        return minBallPixels;
+    }
+
+    public void setMinBallPixels(int minBallPixels) {
+        this.minBallPixels = minBallPixels;
+    }
+
+    public static class Coefs {
+        public int prop = 10, cube = 0, diff = 0, intg = 0;
+    }
+
 }

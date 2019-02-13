@@ -1,16 +1,11 @@
 package ZeroK.GUI;
 
 import org.opencv.core.*;
-import org.opencv.core.Point;
 import org.opencv.highgui.HighGui;
-import org.opencv.imgproc.Imgproc;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
 
 public class Matrix extends Label  {
 
