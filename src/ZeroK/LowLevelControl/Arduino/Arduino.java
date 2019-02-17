@@ -114,6 +114,9 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
     @Override
     public void close() {
         try {
+            port.writeByte((byte) Mode.CLOSE.ordinal());
+            port.writeByte((byte) Mode.CLOSE.ordinal());
+            port.writeByte((byte) Mode.CLOSE.ordinal());
             port.closePort();
         } catch (SerialPortException ex){
             ex.printStackTrace();
@@ -135,6 +138,8 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         @Deprecated
         US_GET,
 
-        SERVO
+        SERVO,
+
+        CLOSE
     }
 }

@@ -10,7 +10,7 @@ public class ArduinoExample {
     private static SerialPort serialPort;
 
     public static void main(String[] args) throws InterruptedException {
-        Arduino ard = new Arduino("COM5");
+        Arduino ard = new Arduino("/dev/rfcomm1");
 
         Scanner cin = new Scanner(System.in);
 
@@ -23,9 +23,11 @@ public class ArduinoExample {
                 ard.analogWrite(6, 50);
             }
 
-            if (input == 'd') {
-                ard.digitalWrite(7, Arduino.Mode.LOW);
-                ard.analogWrite(6, 50);
+            if (input == 'r') {
+                ard.servoStart(10, 30 );
+            }
+            if (input == 'l') {
+                ard.servoStart(10, 90 );
             }
 
             if (input == 's') {

@@ -115,7 +115,7 @@ public class Game extends GameFinder {
 
     private void GUIinit() {
         ball = new GameObject();
-        bot = new LegoBot("/dev/rfcomm0");
+        bot = new LegoBot("/dev/rfcomm1");
         bot.setColor(new Scalar(0, 255, 0));
 
         bot.setKickMotor(bot.getController().A);
