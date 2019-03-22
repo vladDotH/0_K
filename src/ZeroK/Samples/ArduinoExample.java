@@ -9,8 +9,8 @@ public class ArduinoExample {
 
     private static SerialPort serialPort;
 
-    public static void main(String[] args) throws InterruptedException {
-        Arduino ard = new Arduino("/dev/rfcomm1");
+    public static void main(String[] args) {
+        Arduino ard = new Arduino("/dev/rfcomm0");
 
         Scanner cin = new Scanner(System.in);
 
@@ -24,10 +24,18 @@ public class ArduinoExample {
             }
 
             if (input == 'r') {
-                ard.servoStart(10, 30 );
+                ard.servoStart(9, 30 );
             }
             if (input == 'l') {
-                ard.servoStart(10, 90 );
+                ard.servoStart(9, 90 );
+            }
+
+            if (input == 'd') {
+                ard.servoDetach(9);
+            }
+
+            if (input == 'a') {
+                ard.servoAttach(9);
             }
 
             if (input == 's') {

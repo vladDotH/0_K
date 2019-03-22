@@ -8,24 +8,26 @@ enum Mode {
   OUT,
   IN,
 
-  ///@Depricated
+  ///@Deprecated
   US_GET,
 
   SERVO,
-  
-  CLOSE
+  ATTACH,
+  DETACH,
+
+  REFRESH
 };
 
 Servo motors[13];
 
 void setup() {
   Serial.begin(9600);
-  
-  motors[10].attach(10);
 }
 
 byte msg [3];
 int byteCount = 0;
+
+int i = 0;
 
 void loop() {
   if ( Serial.available() ) {
@@ -43,17 +45,18 @@ void loop() {
       analogWrite( msg[1], msg[2] );
     }
 
-    ///@Depricated
+    ///@Deprecated
     if ( msg[0] == US_GET ) {
-      /*      NewPing sonar(msg[1], msg[2], 200);
+      /*      
+       NewPing sonar(msg[1], msg[2], 200);
        int range = sonar.ping_cm();
        Serial.write( (byte)range );
-       */    }
+       */
+    }
 
     if ( msg[0] == PIN_MODE ) {
-      if ( msg[2] == OUT ){
+      if ( msg[2] == OUT )
         pinMode( msg[1], OUTPUT );
-      }
 
       if ( msg[2] == IN )
         pinMode( msg[1], INPUT );
@@ -64,16 +67,39 @@ void loop() {
         motors[msg[1]].write(msg[2]);
       }
     }
-    
-    if ( msg[0] == CLOSE ){
-      delay(1000);
+
+    if ( msg[0] == ATTACH ) {
+      if( !motors[msg[1]].attached() ){
+        motors[msg[1]].attach(msg[1]);
+      }
+    }
+
+    if ( msg[0] == DETACH ) {
+      if( motors[msg[1]].attached() ){
+        motors[msg[1]].detach();
+      }
+    }
+
+    if ( msg[0] == REFRESH ){
+      delay(100);
       while(Serial.available()){
         Serial.read();
       }
-      delay(100);
+      delay(50);
     }
+    
+    //Serial.write((byte)msg[0]);
+    //Serial.write((byte)msg[1]);
+    //Serial.write((byte)msg[2]);
+
     byteCount = 0;
   }
 }
+
+
+
+
+
+
 
 

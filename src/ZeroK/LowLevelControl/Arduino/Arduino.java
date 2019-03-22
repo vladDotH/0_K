@@ -28,6 +28,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             ex.printStackTrace();
         }
 
+        refreshBytes();
     }
 
     public void digitalWrite(int pin, Mode mode) {
@@ -61,6 +62,31 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeByte((byte) Mode.SERVO.ordinal());
             port.writeByte((byte) pin);
             port.writeByte((byte) degree);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void servoAttach(int pin){
+        try {
+            port.writeByte((byte) Mode.ATTACH.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+    public void servoDetach(int pin){
+        try {
+            port.writeByte((byte) Mode.DETACH.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) 0);
 
             Thread.sleep(1);
 
@@ -111,20 +137,26 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    private void refreshBytes(){
+        try {
+            port.writeByte((byte) Mode.REFRESH.ordinal());
+            port.writeByte((byte) Mode.REFRESH.ordinal());
+            port.writeByte((byte) Mode.REFRESH.ordinal());
+        } catch (SerialPortException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void close() {
         try {
-            port.writeByte((byte) Mode.CLOSE.ordinal());
-            port.writeByte((byte) Mode.CLOSE.ordinal());
-            port.writeByte((byte) Mode.CLOSE.ordinal());
             port.closePort();
         } catch (SerialPortException ex){
             ex.printStackTrace();
         }
     }
 
-
-    public static enum Mode {
+    public enum Mode {
         LOW,
         HIGH,
 
@@ -140,6 +172,9 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
         SERVO,
 
-        CLOSE
+        ATTACH,
+        DETACH,
+
+        REFRESH
     }
 }
