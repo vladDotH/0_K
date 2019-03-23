@@ -1,5 +1,3 @@
-#include <Servo.h>
-
 enum Mode {
   DIGITAL = 2,
   ANALOG,
@@ -8,17 +6,24 @@ enum Mode {
   OUT,
   IN,
 
-  ///@Deprecated
+  ///@Depricated
   US_GET,
 
+  ///@Depricated
   SERVO,
-  ATTACH,
-  DETACH,
 
-  REFRESH
+
+
+  SET_MOVESPEED,
+  SET_KICKSPEED,
+
+  SET_MOVE_ABLE,
+  SET_KICK_ABLE,
+
+  SET_MOVE_DIR,
+  SET_KICK_DIR
 };
 
-Servo motors[13];
 
 void setup() {
   Serial.begin(9600);
@@ -27,7 +32,52 @@ void setup() {
 byte msg [3];
 int byteCount = 0;
 
-int i = 0;
+long long time = 0;
+
+class StepMotor{
+  int pinDir, pinEnable, pinStep;
+  int stepDelay, stepTimer;
+  boolean enable;
+
+  const int minDelay = 900, maxDelay = 10000;
+  const float coef = (maxDelay - minDelay) / 255;
+public:
+  StepMotor(int pin_dir, int pin_en, int pin_step){
+    pinDir = pin_dir;
+    pinEnable = pin_en;
+    pinStep = pin_step;
+
+    stepTimer = micros();
+  }
+
+  void on(){
+    enable = true;
+    digitalWrite(pinEnable, LOW);
+  }
+
+  void off(){
+    enable = false;
+    digitalWrite(pinEnable, HIGH);
+  }
+
+  void setDir(boolean dir){
+    digitalWrite(pinDir, dir);
+  }
+
+  void makeStep(){
+    if(enable && micros() - stepTimer >= stepDelay){
+      digitalWrite(pinStep, !digitalRead(pinStep));
+      stepTimer = micros();
+    }
+  }
+
+  ///value must be in [0...255] (byte). 0 - min speed, 255 - max
+  void setDelay(int value){
+    stepDelay = minDelay + (int)abs(value - 255) * coef;
+  }
+};
+
+StepMotor mover(2, 3, 4), kicker(5, 6, 7);
 
 void loop() {
   if ( Serial.available() ) {
@@ -45,58 +95,58 @@ void loop() {
       analogWrite( msg[1], msg[2] );
     }
 
-    ///@Deprecated
-    if ( msg[0] == US_GET ) {
-      /*      
-       NewPing sonar(msg[1], msg[2], 200);
-       int range = sonar.ping_cm();
-       Serial.write( (byte)range );
-       */
-    }
-
     if ( msg[0] == PIN_MODE ) {
-      if ( msg[2] == OUT )
+      if ( msg[2] == OUT ){
         pinMode( msg[1], OUTPUT );
+      }
 
       if ( msg[2] == IN )
         pinMode( msg[1], INPUT );
     }
 
-    if ( msg[0] == SERVO ) {
-      if( motors[msg[1]].attached() ){
-        motors[msg[1]].write(msg[2]);
-      }
+    if ( msg[0] == SET_MOVESPEED ) { 
+      mover.setDelay(msg[1]);
     }
 
-    if ( msg[0] == ATTACH ) {
-      if( !motors[msg[1]].attached() ){
-        motors[msg[1]].attach(msg[1]);
-      }
+    if ( msg[0] == SET_KICKSPEED ) {
+      kicker.setDelay(msg[1]);
     }
 
-    if ( msg[0] == DETACH ) {
-      if( motors[msg[1]].attached() ){
-        motors[msg[1]].detach();
-      }
+    if ( msg[0] == SET_MOVE_ABLE ) {
+      if(msg[1] == 0)
+        mover.off();
+      else 
+        mover.on();
     }
 
-    if ( msg[0] == REFRESH ){
-      delay(100);
-      while(Serial.available()){
-        Serial.read();
-      }
-      delay(50);
+    if ( msg[0] == SET_KICK_ABLE ) {
+      if(msg[1] == 0)
+        kicker.off();
+      else 
+        kicker.on();
     }
-    
-    //Serial.write((byte)msg[0]);
-    //Serial.write((byte)msg[1]);
-    //Serial.write((byte)msg[2]);
+
+    if ( msg[0] == SET_MOVE_DIR ) {
+      if(msg[1] == 0)
+        mover.setDir(false);
+      else 
+        mover.setDir(true);
+    }
+
+    if ( msg[0] == SET_KICK_DIR ) {
+      if(msg[1] == 0)
+        kicker.setDir(false);
+      else 
+        kicker.setDir(true);
+    }
 
     byteCount = 0;
   }
+
+  mover.makeStep();
+//  kicker.makeStep();
+
 }
-
-
 
 
 
