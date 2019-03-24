@@ -57,45 +57,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    public void servoStart(int pin, int degree){
-        try {
-            port.writeByte((byte) Mode.SERVO.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) degree);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void servoAttach(int pin){
-        try {
-            port.writeByte((byte) Mode.ATTACH.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-    public void servoDetach(int pin){
-        try {
-            port.writeByte((byte) Mode.DETACH.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void pinMode(int pin, Mode mode){
+    public void pinMode(int pin, Mode mode) {
         try {
             port.writeByte((byte) Mode.PIN_MODE.ordinal());
             port.writeByte((byte) pin);
@@ -109,11 +71,131 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
     }
 
     @Deprecated
-    public void sonicRead(int trig, int echo){
+    public void sonicRead(int trig, int echo) {
         try {
             port.writeByte((byte) Mode.US_GET.ordinal());
             port.writeByte((byte) trig);
             port.writeByte((byte) echo);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Deprecated
+    public void servoStart(int pin, int degree) {
+        try {
+            port.writeByte((byte) Mode.SERVO.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) degree);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Deprecated
+    public void servoAttach(int pin) {
+        try {
+            port.writeByte((byte) Mode.ATTACH.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Deprecated
+    public void servoDetach(int pin) {
+        try {
+            port.writeByte((byte) Mode.DETACH.ordinal());
+            port.writeByte((byte) pin);
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setMoveSpeed(int speed){
+        try {
+            port.writeByte((byte) Mode.SET_MOVESPEED.ordinal());
+            port.writeByte((byte) speed);
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setKickSpeed(int speed){
+        try {
+            port.writeByte((byte) Mode.SET_KICKSPEED.ordinal());
+            port.writeByte((byte) speed);
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setMoveDir(boolean dir){
+        try {
+            port.writeByte((byte) Mode.SET_MOVE_DIR.ordinal());
+            port.writeByte((byte) (dir ? 1 : 0) );
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setKickDir(boolean dir){
+        try {
+            port.writeByte((byte) Mode.SET_KICK_DIR.ordinal());
+            port.writeByte((byte) (dir ? 1 : 0) );
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setMoveAble(boolean state){
+        try {
+            port.writeByte((byte) Mode.SET_MOVE_ABLE.ordinal());
+            port.writeByte((byte) (state ? 1 : 0) );
+            port.writeByte((byte) 0);
+
+            Thread.sleep(1);
+
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void setKickAble(boolean state){
+        try {
+            port.writeByte((byte) Mode.SET_KICK_ABLE.ordinal());
+            port.writeByte((byte) (state ? 1 : 0) );
+            port.writeByte((byte) 0);
 
             Thread.sleep(1);
 
@@ -137,7 +219,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    private void refreshBytes(){
+    private void refreshBytes() {
         try {
             port.writeByte((byte) Mode.REFRESH.ordinal());
             port.writeByte((byte) Mode.REFRESH.ordinal());
@@ -151,7 +233,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
     public void close() {
         try {
             port.closePort();
-        } catch (SerialPortException ex){
+        } catch (SerialPortException ex) {
             ex.printStackTrace();
         }
     }
@@ -170,11 +252,23 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         @Deprecated
         US_GET,
 
+        @Deprecated
         SERVO,
 
+        @Deprecated
         ATTACH,
+        @Deprecated
         DETACH,
 
-        REFRESH
+        REFRESH,
+
+        SET_MOVESPEED,
+        SET_KICKSPEED,
+
+        SET_MOVE_ABLE,
+        SET_KICK_ABLE,
+
+        SET_MOVE_DIR,
+        SET_KICK_DIR
     }
 }

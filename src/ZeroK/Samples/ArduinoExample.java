@@ -10,37 +10,40 @@ public class ArduinoExample {
     private static SerialPort serialPort;
 
     public static void main(String[] args) {
-        Arduino ard = new Arduino("/dev/rfcomm0");
+        Arduino ard = new Arduino("/dev/ttyUSB0");
 
         Scanner cin = new Scanner(System.in);
+
+        ard.pinMode(2, Arduino.Mode.OUT);
+        ard.pinMode(3, Arduino.Mode.OUT);
+        ard.pinMode(4, Arduino.Mode.OUT);
 
         char input = '0';
         while (input != 'q') {
             input = cin.next().charAt(0);
 
             if (input == 'w') {
-                ard.digitalWrite(7, Arduino.Mode.HIGH);
-                ard.analogWrite(6, 50);
-            }
-
-            if (input == 'r') {
-                ard.servoStart(9, 30 );
-            }
-            if (input == 'l') {
-                ard.servoStart(9, 90 );
+                ard.setMoveDir(true);
             }
 
             if (input == 'd') {
-                ard.servoDetach(9);
+                ard.setMoveDir(false);
+            }
+
+            if (input == 'r') {
+                ard.setMoveAble(true);
+            }
+
+            if (input == 'l') {
+                ard.setMoveAble(false);
             }
 
             if (input == 'a') {
-                ard.servoAttach(9);
+                ard.setMoveSpeed(40);
             }
 
             if (input == 's') {
-                ard.digitalWrite(7, Arduino.Mode.LOW);
-                ard.analogWrite(6, 0);
+                ard.setMoveSpeed(240);
             }
         }
 

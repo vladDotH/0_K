@@ -11,7 +11,11 @@ enum Mode {
 
   ///@Depricated
   SERVO,
-
+  ATTACH,
+  DETACH,
+  ///@
+  
+  REFRESH
 
 
   SET_MOVESPEED,
