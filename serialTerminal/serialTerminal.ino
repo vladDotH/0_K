@@ -29,14 +29,6 @@ enum Mode {
 };
 
 
-void setup() {
-  Serial.begin(9600);
-}
-
-byte msg [3];
-int byteCount = 0;
-
-long long time = 0;
 
 class StepMotor{
   int pinDir, pinEnable, pinStep;
@@ -80,6 +72,15 @@ public:
     stepDelay = minDelay + (int)abs(value - 255) * coef;
   }
 };
+
+
+
+void setup() {
+  Serial.begin(9600);
+}
+
+byte msg [3];
+int byteCount = 0;
 
 StepMotor mover(2, 3, 4), kicker(5, 6, 7);
 
