@@ -1,5 +1,6 @@
 package ZeroK.LowLevelControl.Arduino;
 
+@Deprecated
 public class Servo implements Moveable{
     private Arduino controller;
 

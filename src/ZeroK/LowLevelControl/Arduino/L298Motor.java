@@ -1,5 +1,6 @@
 package ZeroK.LowLevelControl.Arduino;
 
+@Deprecated
 public class L298Motor implements Moveable {
 
     protected Arduino controller;

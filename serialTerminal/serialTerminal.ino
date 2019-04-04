@@ -32,7 +32,7 @@ enum Mode {
 
 class StepMotor{
   int pinDir, pinEnable, pinStep;
-  int stepDelay, stepTimer;
+  unsigned long long int stepDelay, stepTimer;
   boolean enable;
 
   const int minDelay = 900, maxDelay = 10000;

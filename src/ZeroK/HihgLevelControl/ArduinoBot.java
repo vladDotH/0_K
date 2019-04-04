@@ -1,52 +1,26 @@
 package ZeroK.HihgLevelControl;
 
-import ZeroK.LowLevelControl.Arduino.Arduino;
-import ZeroK.LowLevelControl.Arduino.Moveable;
+import ZeroK.LowLevelControl.Arduino.*;
 
 import java.util.ArrayList;
 
 public class ArduinoBot extends Bot {
 
     private Arduino controller;
-    private ArrayList<Moveable> movers, hammers;
+
+    StepMotor mover, kicker;
 
     private int lowDegree = 5, highDegree = 90;
 
-    public ArduinoBot() {
-        movers = new ArrayList<>();
-        hammers = new ArrayList<>();
-    }
-
-    public ArduinoBot(String port) {
-        this();
+    public ArduinoBot(String port, StepMover mover, StepKicker kicker) {
+        this.mover = mover;
+        this.kicker = kicker;
         connect(port);
-    }
-
-    public void addMover(Moveable motor) {
-        motor.attachToArduino(controller);
-        movers.add(motor);
-    }
-
-    public void addHammer(Moveable motor) {
-        motor.attachToArduino(controller);
-        hammers.add(motor);
-    }
-
-    public void removeMover(Moveable motor) {
-        if (movers.contains(motor))
-            movers.remove(motor);
-    }
-
-    public void removeHammer(Moveable motor) {
-        if (hammers.contains(motor))
-            hammers.remove(motor);
     }
 
     @Override
     public void move(int speed) {
-        for (Moveable motor : movers) {
-            motor.move(speed);
-        }
+        mover.move(speed);
     }
 
     @Override
@@ -73,9 +47,7 @@ public class ArduinoBot extends Bot {
 
     @Override
     public void hammerMove(int speed) {
-        for (Moveable motor : hammers) {
-            motor.move(speed);
-        }
+        kicker.move(speed);
     }
 
 

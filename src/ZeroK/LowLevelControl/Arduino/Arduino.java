@@ -126,6 +126,11 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    /**
+     * steppers
+     *
+     */
+
     public void setMoveSpeed(int speed){
         try {
             port.writeByte((byte) Mode.SET_MOVESPEED.ordinal());
@@ -203,6 +208,11 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             ex.printStackTrace();
         }
     }
+
+    /**
+     *
+     *
+     */
 
     @Override
     public void serialEvent(SerialPortEvent event) {

@@ -39,7 +39,7 @@ public class GameFinder extends FrameMaker {
 
         Mat mask = Mat.zeros(frameSize, CvType.CV_8UC1);
 
-        Imgproc.rectangle(mask, object.roi.getRoi(), new Scalar(255), -1);
+        Imgproc.rectangle(mask, object.roi.getDot1(), object.roi.getDot2(), new Scalar(255), -1);
 
         Imgproc.goodFeaturesToTrack(grayImg, corners, maxCorners, cornerQuality, minDistance, mask, blockSize, true, 0.04);
 
@@ -58,7 +58,7 @@ public class GameFinder extends FrameMaker {
 
         Mat mask = new Mat(frameSize, CvType.CV_8UC1, new Scalar(255));
 
-        Imgproc.rectangle(mask, object.roi.getRoi(), new Scalar(0), -1);
+        Imgproc.rectangle(mask, object.roi.getDot1(), object.roi.getDot2(), new Scalar(0), -1);
 
         Core.subtract(binaryImg, mask, binaryImg);
 
@@ -70,7 +70,7 @@ public class GameFinder extends FrameMaker {
     }
 
     public void showRoi(GameObject object) {
-        Imgproc.rectangle(rgbImg, object.roi.getRoi(), object.getColor(), 2);
+        Imgproc.rectangle(rgbImg, object.roi.getDot1(), object.roi.getDot2(), object.getColor(), 2);
     }
 }
 

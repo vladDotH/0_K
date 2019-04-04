@@ -1,6 +1,7 @@
 package ZeroK.Samples;
 
 import ZeroK.LowLevelControl.Arduino.Arduino;
+import ZeroK.LowLevelControl.Arduino.StepMover;
 import jssc.*;
 
 import java.util.Scanner;
@@ -12,39 +13,41 @@ public class ArduinoExample {
     public static void main(String[] args) {
         Arduino ard = new Arduino("/dev/ttyUSB0");
 
+        StepMover mover = new StepMover(2, 3, 4);
+        mover.attachToArduino(ard);
+
         Scanner cin = new Scanner(System.in);
 
-        ard.pinMode(2, Arduino.Mode.OUT);
-        ard.pinMode(3, Arduino.Mode.OUT);
-        ard.pinMode(4, Arduino.Mode.OUT);
+        int input = 0;
+        while (input != 256) {
 
-        char input = '0';
-        while (input != 'q') {
-            input = cin.next().charAt(0);
+            input = cin.nextInt();
 
-            if (input == 'w') {
-                ard.setMoveDir(true);
-            }
-
-            if (input == 'd') {
-                ard.setMoveDir(false);
-            }
-
-            if (input == 'r') {
-                ard.setMoveAble(true);
-            }
-
-            if (input == 'l') {
-                ard.setMoveAble(false);
-            }
-
-            if (input == 'a') {
-                ard.setMoveSpeed(40);
-            }
-
-            if (input == 's') {
-                ard.setMoveSpeed(240);
-            }
+            mover.move(input);
+//
+//            if (input == 'w') {
+//                mover.move(0);
+//            }
+//
+//            if (input == 'd') {
+//                mover.move(-255);
+//            }
+//
+//            if (input == 'r') {
+//                mover.move(-200);
+//            }
+//
+//            if (input == 'l') {
+//                mover.move(10);
+//            }
+//
+//            if (input == 'a') {
+//                mover.move(200);
+//            }
+//
+//            if (input == 's') {
+//                mover.move(255);
+//            }
         }
 
         ard.close();
