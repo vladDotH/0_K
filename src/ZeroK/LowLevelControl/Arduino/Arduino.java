@@ -4,6 +4,7 @@ import jssc.*;
 
 import java.util.*;
 
+@Deprecated
 public class Arduino implements SerialPortEventListener, AutoCloseable {
 
     private SerialPort port;
@@ -128,10 +129,9 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
     /**
      * steppers
-     *
      */
 
-    public void setMoveSpeed(int speed){
+    public void setMoveSpeed(int speed) {
         try {
             port.writeByte((byte) Mode.SET_MOVESPEED.ordinal());
             port.writeByte((byte) speed);
@@ -144,7 +144,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    public void setKickSpeed(int speed){
+    public void setKickSpeed(int speed) {
         try {
             port.writeByte((byte) Mode.SET_KICKSPEED.ordinal());
             port.writeByte((byte) speed);
@@ -157,10 +157,10 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    public void setMoveDir(boolean dir){
+    public void setMoveDir(boolean dir) {
         try {
             port.writeByte((byte) Mode.SET_MOVE_DIR.ordinal());
-            port.writeByte((byte) (dir ? 1 : 0) );
+            port.writeByte((byte) (dir ? 1 : 0));
             port.writeByte((byte) 0);
 
             Thread.sleep(1);
@@ -170,10 +170,10 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    public void setKickDir(boolean dir){
+    public void setKickDir(boolean dir) {
         try {
             port.writeByte((byte) Mode.SET_KICK_DIR.ordinal());
-            port.writeByte((byte) (dir ? 1 : 0) );
+            port.writeByte((byte) (dir ? 1 : 0));
             port.writeByte((byte) 0);
 
             Thread.sleep(1);
@@ -183,10 +183,10 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    public void setMoveAble(boolean state){
+    public void setMoveAble(boolean state) {
         try {
             port.writeByte((byte) Mode.SET_MOVE_ABLE.ordinal());
-            port.writeByte((byte) (state ? 1 : 0) );
+            port.writeByte((byte) (state ? 1 : 0));
             port.writeByte((byte) 0);
 
             Thread.sleep(1);
@@ -196,10 +196,10 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
-    public void setKickAble(boolean state){
+    public void setKickAble(boolean state) {
         try {
             port.writeByte((byte) Mode.SET_KICK_ABLE.ordinal());
-            port.writeByte((byte) (state ? 1 : 0) );
+            port.writeByte((byte) (state ? 1 : 0));
             port.writeByte((byte) 0);
 
             Thread.sleep(1);
@@ -210,7 +210,6 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
     }
 
     /**
-     *
      *
      */
 

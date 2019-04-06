@@ -31,6 +31,9 @@ public class LegoBot extends Bot {
 
     @Override
     public void move(int speed) {
+        if (speed > 100) speed = 100;
+        if (speed < -100) speed = -100;
+
         controller.ride(speed * direction, speed * direction);
     }
 

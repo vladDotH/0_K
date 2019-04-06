@@ -15,7 +15,7 @@ public class LegoExample {
 
         Window win = new Window("lego sample");
 
-        LegoBot bot = new LegoBot("/dev/rfcomm0");
+        LegoBot bot = new LegoBot("COM4");
         bot.setLR(bot.getController().A, bot.getController().C);
 
         bot.setKickMotor(bot.getController().B);

@@ -115,7 +115,7 @@ public class Game extends GameFinder {
 
     private void GUIinit() {
         ball = new GameObject();
-        bot = new LegoBot("/dev/rfcomm1");
+        bot = new LegoBot("COM4");
         bot.setColor(new Scalar(0, 255, 0));
 
         bot.setKickMotor(bot.getController().A);
@@ -150,17 +150,23 @@ public class Game extends GameFinder {
 
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
-                        case KeyEvent.VK_LEFT:
+                        case 'a':
                             bot.move(100);
                             break;
-                        case KeyEvent.VK_RIGHT:
+                        case 'd':
                             bot.move(-100);
                             break;
-                        case KeyEvent.VK_DOWN:
+                        case 'w':
                             bot.kick();
                             break;
                     }
                 }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+                bot.move(0);
             }
         });
 

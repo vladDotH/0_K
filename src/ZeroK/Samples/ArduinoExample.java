@@ -6,6 +6,7 @@ import jssc.*;
 
 import java.util.Scanner;
 
+@Deprecated
 public class ArduinoExample {
 
     private static SerialPort serialPort;

@@ -1,11 +1,12 @@
 package ZeroK.LowLevelControl.Arduino;
 
+@Deprecated
 public abstract class StepMotor implements Moveable {
 
     protected Arduino controller;
 
     protected int pin_step, pin_enable, pin_dir,
-    speed = 0;
+            speed = 0;
 
     public StepMotor(int pin_dir, int pin_step, int pin_enable) {
         this.pin_step = pin_step;

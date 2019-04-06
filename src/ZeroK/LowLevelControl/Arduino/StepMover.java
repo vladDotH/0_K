@@ -1,5 +1,6 @@
 package ZeroK.LowLevelControl.Arduino;
 
+@Deprecated
 public class StepMover extends StepMotor {
 
     public StepMover(int pin_dir, int pin_step, int pin_enable) {

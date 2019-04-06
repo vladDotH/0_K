@@ -4,6 +4,7 @@ import ZeroK.LowLevelControl.Arduino.*;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class ArduinoBot extends Bot {
 
     private Arduino controller;
