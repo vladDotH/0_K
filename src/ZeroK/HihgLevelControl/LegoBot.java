@@ -49,7 +49,7 @@ public class LegoBot extends Bot {
                 hammerMove(upSpeed);
                 Thread.sleep(upTime);
 
-                hammerMove(downSpeed);
+                hammerMove(-downSpeed);
                 Thread.sleep(downTime);
 
                 hammerMove(0);
@@ -88,6 +88,16 @@ public class LegoBot extends Bot {
 
     @Override
     public void close() {
+        controller.A.setSpeed(0);
+        controller.B.setSpeed(0);
+        controller.C.setSpeed(0);
+        controller.D.setSpeed(0);
+
+        controller.A.stopFloat();
+        controller.B.stopFloat();
+        controller.C.stopFloat();
+        controller.D.stopFloat();
+
         controller.close();
     }
 
