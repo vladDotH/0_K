@@ -39,7 +39,7 @@ public abstract class Bot extends GameObject {
         if( delY < kickRange )
             kick();
 
-        double delX = Math.abs(ball.getPos().x - this.getPos().x);
+        double delX = (ball.getPos().x - this.getPos().x);
 
         double speed = delX * coefs.prop
                 + Math.pow(delX, 3) * coefs.cube;
@@ -50,7 +50,7 @@ public abstract class Bot extends GameObject {
 
     protected int kickRange = 30;
 
-    protected int upTime = 500, downTime = 600;
+    protected int upTime = 200, downTime = 600;
     protected boolean automate = false;
     protected int direction = 1;
     protected int minBallPixels = 30;

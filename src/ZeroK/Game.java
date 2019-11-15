@@ -115,13 +115,13 @@ public class Game extends GameFinder {
 
     private void GUIinit() {
         ball = new GameObject();
-        bot = new LegoBot("COM4");
+        bot = new LegoBot("COM7");
         bot.setColor(new Scalar(0, 255, 0));
 
-        bot.setKickMotor(bot.getController().A);
-        bot.setHelpKicker(bot.getController().B);
+        bot.setKickMotor(bot.getController().C);
+        bot.setHelpKicker(bot.getController().D);
 
-        bot.setLR(bot.getController().C, bot.getController().D);
+        bot.setLR(bot.getController().A, bot.getController().B);
 
 
         rgbWin = new Window("rgb image");
@@ -166,7 +166,8 @@ public class Game extends GameFinder {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                bot.move(0);
+                bot.
+                        move(0);
             }
         });
 

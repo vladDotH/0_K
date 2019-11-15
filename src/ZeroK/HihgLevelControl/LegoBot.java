@@ -8,7 +8,7 @@ public class LegoBot extends Bot {
 
     private jEV3.Motor kickMotor, helpKicker;
 
-    private int upSpeed = 100, downSpeed = 60;
+    private int upSpeed = 100, downSpeed = 30;
 
     public void setKickMotor(jEV3.Motor kickMotor) {
         this.kickMotor = kickMotor;
@@ -46,10 +46,10 @@ public class LegoBot extends Bot {
 
         new Thread(() -> {
             try {
-                hammerMove(upSpeed);
+                hammerMove(-upSpeed);
                 Thread.sleep(upTime);
 
-                hammerMove(-downSpeed);
+                hammerMove(downSpeed);
                 Thread.sleep(downTime);
 
                 hammerMove(0);
@@ -67,17 +67,17 @@ public class LegoBot extends Bot {
             kickMotor.setSpeed(speed);
 
             if (speed == 0)
-                kickMotor.stopBreak();
+                kickMotor.stopFloat();
             else
                 kickMotor.start();
         }
         if (helpKicker != null) {
-            helpKicker.setSpeed(speed);
+            helpKicker.setSpeed(-speed);
 
             if (speed == 0)
-                helpKicker.stopBreak();
+                helpKicker.stopFloat();
             else
-                kickMotor.start();
+                helpKicker.start();
         }
     }
 
@@ -92,6 +92,11 @@ public class LegoBot extends Bot {
         controller.B.setSpeed(0);
         controller.C.setSpeed(0);
         controller.D.setSpeed(0);
+
+        controller.A.start();
+        controller.B.start();
+        controller.C.start();
+        controller.D.start();
 
         controller.A.stopFloat();
         controller.B.stopFloat();
