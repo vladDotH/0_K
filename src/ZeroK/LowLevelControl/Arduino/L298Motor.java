@@ -1,6 +1,5 @@
 package ZeroK.LowLevelControl.Arduino;
 
-@Deprecated
 public class L298Motor implements Moveable {
 
     protected Arduino controller;
@@ -12,10 +11,6 @@ public class L298Motor implements Moveable {
         this.speedPin = speedPin;
         this.dirPin1 = dirPin1;
         this.dirPin2 = dirPin2;
-
-        controller.pinMode(speedPin, Arduino.Mode.OUT);
-        controller.pinMode(dirPin1, Arduino.Mode.OUT);
-        controller.pinMode(dirPin2, Arduino.Mode.OUT);
     }
 
     public L298Motor(Arduino controller, int speedPin, int dirPin1, int dirPin2) {
@@ -24,8 +19,11 @@ public class L298Motor implements Moveable {
     }
 
     @Override
-    public void attachToArduino(Arduino controller){
+    public void attachToArduino(Arduino controller) {
         this.controller = controller;
+        controller.pinMode(speedPin, Arduino.Mode.OUT);
+        controller.pinMode(dirPin1, Arduino.Mode.OUT);
+        controller.pinMode(dirPin2, Arduino.Mode.OUT);
     }
 
     @Override
@@ -37,12 +35,13 @@ public class L298Motor implements Moveable {
             return;
 
         this.speed = speed;
-
-        if (speed > 0){
+        if (speed == 0) {
+            controller.digitalWrite(dirPin1, Arduino.Mode.LOW);
+            controller.digitalWrite(dirPin2, Arduino.Mode.LOW);
+        } else if (speed > 0) {
             controller.digitalWrite(dirPin1, Arduino.Mode.HIGH);
             controller.digitalWrite(dirPin2, Arduino.Mode.LOW);
-        }
-        else{
+        } else {
             controller.digitalWrite(dirPin1, Arduino.Mode.LOW);
             controller.digitalWrite(dirPin2, Arduino.Mode.HIGH);
         }

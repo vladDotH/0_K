@@ -2,21 +2,22 @@ package ZeroK.HihgLevelControl;
 
 import ZeroK.LowLevelControl.Arduino.*;
 
-import java.util.ArrayList;
-
-@Deprecated
 public class ArduinoBot extends Bot {
 
     private Arduino controller;
 
-    StepMotor mover, kicker;
+    Moveable mover, kicker;
 
-    private int lowDegree = 5, highDegree = 90;
+    private int lowSpeed = -80, highSpeed = 255;
 
-    public ArduinoBot(String port, StepMover mover, StepKicker kicker) {
+    public ArduinoBot(String port, Moveable mover, Moveable kicker) {
         this.mover = mover;
         this.kicker = kicker;
+
         connect(port);
+
+        mover.attachToArduino(controller);
+        kicker.attachToArduino(controller);
     }
 
     @Override
@@ -33,11 +34,13 @@ public class ArduinoBot extends Bot {
 
         new Thread(() -> {
             try {
-                hammerMove(highDegree);
+                hammerMove(highSpeed);
                 Thread.sleep(upTime);
 
-                hammerMove(lowDegree);
+                hammerMove(lowSpeed);
                 Thread.sleep(downTime);
+
+                hammerMove(0);
 
                 kickLock = false;
             } catch (InterruptedException e) {
@@ -50,7 +53,6 @@ public class ArduinoBot extends Bot {
     public void hammerMove(int speed) {
         kicker.move(speed);
     }
-
 
     @Override
     public void connect(String port) {

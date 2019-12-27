@@ -50,7 +50,7 @@ public abstract class Bot extends GameObject {
 
     protected int kickRange = 30;
 
-    protected int upTime = 200, downTime = 600;
+    protected int upTime = 200, downTime = 200;
     protected boolean automate = false;
     protected int direction = 1;
     protected int minBallPixels = 30;

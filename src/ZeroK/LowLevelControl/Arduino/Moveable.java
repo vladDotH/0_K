@@ -1,6 +1,5 @@
 package ZeroK.LowLevelControl.Arduino;
 
-@Deprecated
 public interface Moveable {
     void move(int val);
 

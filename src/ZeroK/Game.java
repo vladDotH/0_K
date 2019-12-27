@@ -3,8 +3,11 @@ package ZeroK;
 
 import ZeroK.CameraProcessing.GameFinder;
 import ZeroK.GUI.*;
+import ZeroK.HihgLevelControl.ArduinoBot;
+import ZeroK.HihgLevelControl.Bot;
 import ZeroK.HihgLevelControl.GameObject;
 import ZeroK.HihgLevelControl.LegoBot;
+import ZeroK.LowLevelControl.Arduino.L298Motor;
 import org.opencv.core.*;
 
 import java.awt.event.KeyAdapter;
@@ -35,7 +38,7 @@ public class Game extends GameFinder {
     }
 
 
-    private LegoBot bot;
+    private Bot bot;
     private GameObject ball;
 
     private Window rgbWin;
@@ -115,14 +118,12 @@ public class Game extends GameFinder {
 
     private void GUIinit() {
         ball = new GameObject();
-        bot = new LegoBot("COM7");
+
+        L298Motor move = new L298Motor(5, 4, 3);
+        L298Motor kick = new L298Motor(6, 7, 8);
+        bot = new ArduinoBot("COM11", move, kick);
+
         bot.setColor(new Scalar(0, 255, 0));
-
-        bot.setKickMotor(bot.getController().C);
-        bot.setHelpKicker(bot.getController().D);
-
-        bot.setLR(bot.getController().A, bot.getController().B);
-
 
         rgbWin = new Window("rgb image");
         rgbMat = new Matrix("rgb", frameSize);
@@ -151,10 +152,10 @@ public class Game extends GameFinder {
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
                         case 'a':
-                            bot.move(100);
+                            bot.move(255);
                             break;
                         case 'd':
-                            bot.move(-100);
+                            bot.move(-255);
                             break;
                         case 'w':
                             bot.kick();
