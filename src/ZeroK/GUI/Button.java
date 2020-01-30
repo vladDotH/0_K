@@ -16,6 +16,10 @@ public class Button extends View
         message = null;
     }
 
+    public void doClick() {
+        button.doClick();
+    }
+
     public void setOnClickListener(ActionListener listener) {
         button.addActionListener(listener);
     }

@@ -7,6 +7,7 @@ import ZeroK.HihgLevelControl.GameObject;
 import ZeroK.HihgLevelControl.LegoBot;
 import org.opencv.core.*;
 
+import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -18,7 +19,7 @@ public class Game extends GameFinder {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         GameObject.setDefaultFrameSize(new Point(640 / 2, 480 / 2));
-        new Game(0, new Size(640 / 2, 480 / 2), new Size(3, 3))
+        new Game(1, new Size(640 / 2, 480 / 2), new Size(3, 3))
                 .startGame();
     }
 
@@ -76,7 +77,7 @@ public class Game extends GameFinder {
             findByCorners(bot);
 
             if (bot.getMode())
-                bot.react(ball);
+                bot.react(ball, ballX1.getValue(), ballX2.getValue());
 
             if (markCenters) {
                 markObject(ball);
@@ -115,7 +116,7 @@ public class Game extends GameFinder {
 
     private void GUIinit() {
         ball = new GameObject();
-        bot = new LegoBot("COM7");
+        bot = new LegoBot("COM3");
         bot.setColor(new Scalar(0, 255, 0));
 
         bot.setKickMotor(bot.getController().C);
@@ -146,6 +147,7 @@ public class Game extends GameFinder {
 
                 if (e.getKeyChar() == 'q') {
                     gameProcess = false;
+                    exit.doClick();
                 }
 
                 if (!bot.getMode()) {
