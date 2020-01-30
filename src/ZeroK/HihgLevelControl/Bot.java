@@ -28,15 +28,15 @@ public abstract class Bot extends GameObject {
         return direction;
     }
 
-    public void react(GameObject ball, int x1, int x2) {
-        if (ball.getArea() < minBallPixels) {
+    public void react(GameObject ball) {
+        if( ball.getArea() < minBallPixels ) {
             move(0);
             return;
         }
 
         double delY = Math.abs(ball.getPos().y - this.getPos().y);
 
-        if (delY < kickRange)
+        if( delY < kickRange )
             kick();
 
         double delX = (ball.getPos().x - this.getPos().x);
@@ -44,19 +44,13 @@ public abstract class Bot extends GameObject {
         double speed = delX * coefs.prop
                 + Math.pow(delX, 3) * coefs.cube;
 
-        //TODO
-        if (Math.abs(x1 - ball.getPos().x) < 20 || Math.abs(x2 - ball.getPos().x) < 20 && (
-                Math.abs(x1 - this.getPos().x) < 10 || Math.abs(x2 - this.getPos().x)  < 10)
-                )
-            speed = 0;
-        //
 
         move((int) speed);
     }
 
     protected int kickRange = 30;
 
-    protected int upTime = 200, downTime = 500;
+    protected int upTime = 200, downTime = 200;
     protected boolean automate = false;
     protected int direction = 1;
     protected int minBallPixels = 30;

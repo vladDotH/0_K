@@ -1,6 +1,5 @@
 package ZeroK.LowLevelControl.Arduino;
 
-@Deprecated
 public class Motor implements Moveable{
     protected Arduino controller;
 
@@ -10,9 +9,6 @@ public class Motor implements Moveable{
     public Motor(int speedPin, int dirPin) {
         this.speedPin = speedPin;
         this.dirPin = dirPin;
-
-        controller.pinMode(speedPin, Arduino.Mode.OUT);
-        controller.pinMode(dirPin, Arduino.Mode.OUT);
     }
 
     public Motor(Arduino controller, int speedPin, int dirPin) {
@@ -23,6 +19,8 @@ public class Motor implements Moveable{
     @Override
     public void attachToArduino(Arduino controller){
         this.controller = controller;
+        controller.pinMode(speedPin, Arduino.Mode.OUT);
+        controller.pinMode(dirPin, Arduino.Mode.OUT);
     }
 
     @Override

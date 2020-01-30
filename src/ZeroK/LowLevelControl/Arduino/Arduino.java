@@ -4,7 +4,6 @@ import jssc.*;
 
 import java.util.*;
 
-@Deprecated
 public class Arduino implements SerialPortEventListener, AutoCloseable {
 
     private SerialPort port;
@@ -24,7 +23,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
             port.addEventListener(this, SerialPort.MASK_RXCHAR);
 
-            Thread.sleep(2000);
+            Thread.sleep(500);
         } catch (SerialPortException | InterruptedException ex) {
             ex.printStackTrace();
         }

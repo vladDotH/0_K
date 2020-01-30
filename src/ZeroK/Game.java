@@ -3,11 +3,13 @@ package ZeroK;
 
 import ZeroK.CameraProcessing.GameFinder;
 import ZeroK.GUI.*;
+import ZeroK.HihgLevelControl.ArduinoBot;
+import ZeroK.HihgLevelControl.Bot;
 import ZeroK.HihgLevelControl.GameObject;
 import ZeroK.HihgLevelControl.LegoBot;
+import ZeroK.LowLevelControl.Arduino.L298Motor;
 import org.opencv.core.*;
 
-import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -19,7 +21,7 @@ public class Game extends GameFinder {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
         GameObject.setDefaultFrameSize(new Point(640 / 2, 480 / 2));
-        new Game(1, new Size(640 / 2, 480 / 2), new Size(3, 3))
+        new Game(0, new Size(640 / 2, 480 / 2), new Size(3, 3))
                 .startGame();
     }
 
@@ -36,7 +38,7 @@ public class Game extends GameFinder {
     }
 
 
-    private LegoBot bot;
+    private Bot bot;
     private GameObject ball;
 
     private Window rgbWin;
@@ -77,7 +79,7 @@ public class Game extends GameFinder {
             findByCorners(bot);
 
             if (bot.getMode())
-                bot.react(ball, ballX1.getValue(), ballX2.getValue());
+                bot.react(ball);
 
             if (markCenters) {
                 markObject(ball);
@@ -116,14 +118,12 @@ public class Game extends GameFinder {
 
     private void GUIinit() {
         ball = new GameObject();
-        bot = new LegoBot("COM3");
+
+        L298Motor move = new L298Motor(0, 12, 14);
+        L298Motor kick = new L298Motor(1, 26, 25);
+        bot = new ArduinoBot("COM14", move, kick);
+
         bot.setColor(new Scalar(0, 255, 0));
-
-        bot.setKickMotor(bot.getController().C);
-        bot.setHelpKicker(bot.getController().D);
-
-        bot.setLR(bot.getController().A, bot.getController().B);
-
 
         rgbWin = new Window("rgb image");
         rgbMat = new Matrix("rgb", frameSize);
@@ -147,16 +147,15 @@ public class Game extends GameFinder {
 
                 if (e.getKeyChar() == 'q') {
                     gameProcess = false;
-                    exit.doClick();
                 }
 
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
                         case 'a':
-                            bot.move(100);
+                            bot.move(255);
                             break;
                         case 'd':
-                            bot.move(-100);
+                            bot.move(-255);
                             break;
                         case 'w':
                             bot.kick();
