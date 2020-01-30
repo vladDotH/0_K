@@ -130,6 +130,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
      * steppers
      */
 
+    @Deprecated
     public void setMoveSpeed(int speed) {
         try {
             port.writeByte((byte) Mode.SET_MOVESPEED.ordinal());
@@ -143,6 +144,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    @Deprecated
     public void setKickSpeed(int speed) {
         try {
             port.writeByte((byte) Mode.SET_KICKSPEED.ordinal());
@@ -156,6 +158,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    @Deprecated
     public void setMoveDir(boolean dir) {
         try {
             port.writeByte((byte) Mode.SET_MOVE_DIR.ordinal());
@@ -169,6 +172,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    @Deprecated
     public void setKickDir(boolean dir) {
         try {
             port.writeByte((byte) Mode.SET_KICK_DIR.ordinal());
@@ -182,6 +186,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    @Deprecated
     public void setMoveAble(boolean state) {
         try {
             port.writeByte((byte) Mode.SET_MOVE_ABLE.ordinal());
@@ -195,6 +200,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    @Deprecated
     public void setKickAble(boolean state) {
         try {
             port.writeByte((byte) Mode.SET_KICK_ABLE.ordinal());

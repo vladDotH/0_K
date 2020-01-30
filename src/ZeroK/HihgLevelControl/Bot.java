@@ -29,21 +29,30 @@ public abstract class Bot extends GameObject {
     }
 
     public void react(GameObject ball) {
-        if( ball.getArea() < minBallPixels ) {
+        if (ball.getArea() < minBallPixels) {
             move(0);
             return;
         }
 
         double delY = Math.abs(ball.getPos().y - this.getPos().y);
 
-        if( delY < kickRange )
+        if (delY < kickRange) {
             kick();
+        }
 
-        double delX = (ball.getPos().x - this.getPos().x);
+        double delX = 0;
+
+        if (Math.abs(roi.getDot1().x - ball.getPos().x) < borderRange)
+            delX = (roi.getDot1().x + borderRange) - getPos().x;
+
+        else if (Math.abs(roi.getDot2().x - ball.getPos().x) < borderRange)
+            delX = (roi.getDot2().x - borderRange) - getPos().x;
+
+        else
+            delX = (ball.getPos().x - this.getPos().x);
 
         double speed = delX * coefs.prop
                 + Math.pow(delX, 3) * coefs.cube;
-
 
         move((int) speed);
     }
@@ -55,7 +64,17 @@ public abstract class Bot extends GameObject {
     protected int direction = 1;
     protected int minBallPixels = 30;
 
+    protected int borderRange = 20;
+
     protected boolean kickLock = false;
+
+    public int getBorderRange() {
+        return borderRange;
+    }
+
+    public void setBorderRange(int borderRange) {
+        this.borderRange = borderRange;
+    }
 
     public final Coefs coefs = new Coefs();
 
