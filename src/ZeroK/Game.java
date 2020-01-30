@@ -119,9 +119,9 @@ public class Game extends GameFinder {
     private void GUIinit() {
         ball = new GameObject();
 
-        L298Motor move = new L298Motor(5, 4, 3);
-        L298Motor kick = new L298Motor(6, 7, 8);
-        bot = new ArduinoBot("COM11", move, kick);
+        L298Motor move = new L298Motor(0, 12, 14);
+        L298Motor kick = new L298Motor(1, 26, 25);
+        bot = new ArduinoBot("COM14", move, kick);
 
         bot.setColor(new Scalar(0, 255, 0));
 
