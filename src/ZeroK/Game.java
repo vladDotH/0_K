@@ -20,8 +20,11 @@ public class Game extends GameFinder {
     public static void main(String[] args) {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-        GameObject.setDefaultFrameSize(new Point(640 / 2, 480 / 2));
-        new Game(0, new Size(640 / 2, 480 / 2), new Size(3, 3))
+        int W = 640 / 2,
+                H = 480 / 2;
+
+        GameObject.setDefaultFrameSize(new Point(W, H));
+        new Game(0, new Size(W, H), new Size(3, 3))
                 .startGame();
     }
 
@@ -50,7 +53,7 @@ public class Game extends GameFinder {
     private Matrix rgbMat, hsvMat, binMat;
 
     private Window robotSetting;
-    private Slider propCoef, kickRange, minBallPixels;
+    private Slider propCoef, kickRange, minBallPixels, borderRange;
     private CheckBox automate;
     private Button direction;
 
@@ -254,6 +257,9 @@ public class Game extends GameFinder {
 
         automate = new CheckBox("autoplay", bot.getMode());
         automate.setActionListener(actionEvent -> bot.switchMode());
+
+        borderRange = new Slider("border range", 0, 100,  bot.getBorderRange());
+        borderRange.setChangeListener(changeEvent -> bot.setBorderRange(borderRange.getValue()));
 
         robotSetting.addView(direction)
                 .addView(automate)
