@@ -1,5 +1,6 @@
 package ZeroK.LowLevelControl.Lego;
 
+import ZeroK.LowLevelControl.SafeSerialPort;
 import jssc.*;
 
 public class jEV3 implements SerialPortEventListener, AutoCloseable {
@@ -78,11 +79,11 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
             C = new Motor(MotorCodes.C),
             D = new Motor(MotorCodes.D);
 
-    private SerialPort ev3;
+    private SafeSerialPort ev3;
     private Motor left = B, right = C;
 
     public jEV3(String portName) {
-        ev3 = new SerialPort(portName);
+        ev3 = new SafeSerialPort(portName);
 
         try {
             ev3.openPort();
