@@ -53,7 +53,8 @@ public class Game extends GameFinder {
     private Matrix rgbMat, hsvMat, binMat;
 
     private Window robotSetting;
-    private Slider propCoef, kickRange, minBallPixels, borderRange;
+    private Slider propCoef, cubeCoef, diffCoef, intgCoef,
+            kickRange, minBallPixels, borderRange;
     private CheckBox automate;
     private Button direction;
 
@@ -246,8 +247,17 @@ public class Game extends GameFinder {
             direction.setMessage(String.valueOf(bot.getDirection()));
         });
 
-        propCoef = new Slider("proportional coefficient", 0, 1000, bot.coefs.prop);
-        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue());
+        propCoef = new Slider("proportional coefficient (/10)", 0, 1000, bot.coefs.prop * 10);
+        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue() / 10);
+
+        cubeCoef = new Slider("cubic coefficient (/100)", 0, 1000, bot.coefs.cube);
+        cubeCoef.setChangeListener(changeEvent -> bot.coefs.cube = cubeCoef.getValue() / 100);
+
+        diffCoef = new Slider("differential coefficient (/100)", 0, 1000, bot.coefs.diff);
+        diffCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 100);
+
+        intgCoef = new Slider("integral coefficient (/1000)", 0, 1000, bot.coefs.intg);
+        intgCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 1000);
 
         kickRange = new Slider("kick range", 0, 60, bot.getKickRange());
         kickRange.setChangeListener(changeEvent -> bot.setKickRange(kickRange.getValue()));
@@ -258,14 +268,18 @@ public class Game extends GameFinder {
         automate = new CheckBox("autoplay", bot.getMode());
         automate.setActionListener(actionEvent -> bot.switchMode());
 
-        borderRange = new Slider("border range", 0, 100,  bot.getBorderRange());
+        borderRange = new Slider("border range", 0, 100, bot.getBorderRange());
         borderRange.setChangeListener(changeEvent -> bot.setBorderRange(borderRange.getValue()));
 
         robotSetting.addView(direction)
                 .addView(automate)
                 .addView(propCoef)
+                .addView(cubeCoef)
+                .addView(diffCoef)
+                .addView(intgCoef)
                 .addView(kickRange)
-                .addView(minBallPixels);
+                .addView(minBallPixels)
+                .addView(borderRange);
 
 
         roiWin = new Window("intresting ranges");
