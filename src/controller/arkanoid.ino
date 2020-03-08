@@ -33,6 +33,15 @@ struct Motor {
     this->channel = channel;
   }
 
+  void setup() {
+    pinMode(dir1, OUTPUT);
+    pinMode(dir2, OUTPUT);
+    pinMode(speed_pin, OUTPUT);
+
+    ledcSetup(channel, freq, resolution);
+    ledcAttachPin(speed_pin, channel);
+  }
+
   void move(int power) {
     if (power > 0) {
       digitalWrite(dir1, HIGH);
@@ -65,6 +74,7 @@ void kick_task( void *pvParameters ) {
       delay(up_time);
       kicker.move(down_power);
       delay(down_time);
+      kick_flag = false;
     }
   }
 }
@@ -72,19 +82,8 @@ void kick_task( void *pvParameters ) {
 void setup() {
   esp_bt.begin("Esp32 arkanoid");
 
-  pinMode(mover.dir1, OUTPUT);
-  pinMode(mover.dir2, OUTPUT);
-  pinMode(mover.speed_pin, OUTPUT);
-
-  pinMode(kicker.dir1, OUTPUT);
-  pinMode(kicker.dir2, OUTPUT);
-  pinMode(kicker.speed_pin, OUTPUT);
-
-  ledcSetup(mover.channel, freq, resolution);
-  ledcAttachPin(mover.speed_pin, mover.channel);
-
-  ledcSetup(kicker.channel, freq, resolution);
-  ledcAttachPin(kicker.speed_pin, kicker.channel);
+  mover.setup();
+  kicker.setup();
 
   xTaskCreatePinnedToCore(
     kick_task,   /* Task function. */
@@ -140,5 +139,4 @@ void loop() {
 
     byteCount = 0;
   }
-
 }
