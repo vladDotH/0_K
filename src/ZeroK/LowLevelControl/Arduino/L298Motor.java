@@ -1,6 +1,7 @@
 package ZeroK.LowLevelControl.Arduino;
 
-public class L298Motor implements Moveable {
+@Deprecated
+public class L298Motor {
 
     protected Arduino controller;
 
@@ -18,15 +19,10 @@ public class L298Motor implements Moveable {
         attachToArduino(controller);
     }
 
-    @Override
     public void attachToArduino(Arduino controller) {
         this.controller = controller;
-        controller.pinMode(speedPin, Arduino.Mode.OUT);
-        controller.pinMode(dirPin1, Arduino.Mode.OUT);
-        controller.pinMode(dirPin2, Arduino.Mode.OUT);
     }
 
-    @Override
     public void move(int speed) {
         if (speed > 255) speed = 255;
         if (speed < -255) speed = -255;

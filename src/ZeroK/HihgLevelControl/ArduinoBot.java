@@ -6,52 +6,25 @@ public class ArduinoBot extends Bot {
 
     private Arduino controller;
 
-    Moveable mover, kicker;
-
-    private int lowSpeed = -80, highSpeed = 255;
-
-    public ArduinoBot(String port, Moveable mover, Moveable kicker) {
-        this.mover = mover;
-        this.kicker = kicker;
-
+    public ArduinoBot(String port) {
         connect(port);
-
-        mover.attachToArduino(controller);
-        kicker.attachToArduino(controller);
     }
 
     @Override
     public void move(int speed) {
-        mover.move(speed);
+        if (speed > 255) speed = 255;
+        if (speed < -255) speed = -255;
+        controller.move(speed * direction);
     }
 
     @Override
     public void kick() {
-        if (kickLock)
-            return;
-
-        kickLock = true;
-
-        new Thread(() -> {
-            try {
-                hammerMove(highSpeed);
-                Thread.sleep(upTime);
-
-                hammerMove(lowSpeed);
-                Thread.sleep(downTime);
-
-                hammerMove(0);
-
-                kickLock = false;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+        controller.kick();
     }
 
+    @Deprecated
     @Override
     public void hammerMove(int speed) {
-        kicker.move(speed);
     }
 
     @Override
@@ -62,5 +35,29 @@ public class ArduinoBot extends Bot {
     @Override
     public void close() {
         controller.close();
+    }
+
+    @Override
+    public void setUpTime(int upTime) {
+        super.setUpTime(upTime);
+        controller.kickConfigUpTime(upTime);
+    }
+
+    @Override
+    public void setDownTime(int downTime) {
+        super.setDownTime(downTime);
+        controller.kickConfigDownTime(downTime);
+    }
+
+    @Override
+    public void setDownSpeed(int downSpeed) {
+        super.setDownSpeed(downSpeed);
+        controller.kickConfigDownSpeed(downSpeed);
+    }
+
+    @Override
+    public void setUpSpeed(int upSpeed) {
+        super.setUpSpeed(upSpeed);
+        controller.kickConfigUpSpeed(upSpeed);
     }
 }

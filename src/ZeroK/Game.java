@@ -54,7 +54,8 @@ public class Game extends GameFinder {
 
     private Window robotSetting;
     private Slider propCoef, cubeCoef, diffCoef, intgCoef,
-            kickRange, minBallPixels, borderRange;
+            kickRange, minBallPixels, borderRange,
+            upTime, upPower, downTime, downPower;
     private CheckBox automate;
     private Button direction;
 
@@ -123,9 +124,7 @@ public class Game extends GameFinder {
     private void GUIinit() {
         ball = new GameObject();
 
-        L298Motor move = new L298Motor(0, 12, 14);
-        L298Motor kick = new L298Motor(1, 26, 25);
-        bot = new ArduinoBot("COM14", move, kick);
+        bot = new ArduinoBot("COM14");
 
         bot.setColor(new Scalar(0, 255, 0));
 
@@ -156,10 +155,10 @@ public class Game extends GameFinder {
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
                         case 'a':
-                            bot.move(255);
+                            bot.move(255 * bot.getDirection());
                             break;
                         case 'd':
-                            bot.move(-255);
+                            bot.move(-255 * bot.getDirection());
                             break;
                         case 'w':
                             bot.kick();
@@ -271,6 +270,18 @@ public class Game extends GameFinder {
         borderRange = new Slider("border range", 0, 100, bot.getBorderRange());
         borderRange.setChangeListener(changeEvent -> bot.setBorderRange(borderRange.getValue()));
 
+        upTime = new Slider("kick up time", 0, 1023, bot.getUpTime());
+        upTime.setChangeListener(changeEvent -> bot.setUpTime(upTime.getValue()));
+
+        downTime = new Slider("kick down time", 0, 1023, bot.getDownTime());
+        downTime.setChangeListener(changeEvent -> bot.setDownTime(downTime.getValue()));
+
+        upPower = new Slider("kick up power", -255, 255, bot.getUpSpeed());
+        upPower.setChangeListener(changeEvent -> bot.setUpSpeed(upPower.getValue()));
+
+        downPower = new Slider("kick down power", -255, 255, bot.getDownSpeed());
+        downPower.setChangeListener(changeEvent -> bot.setDownSpeed(downPower.getValue()));
+
         robotSetting.addView(direction)
                 .addView(automate)
                 .addView(propCoef)
@@ -279,7 +290,14 @@ public class Game extends GameFinder {
                 .addView(intgCoef)
                 .addView(kickRange)
                 .addView(minBallPixels)
-                .addView(borderRange);
+                .addView(borderRange)
+
+                .addView(upTime)
+                .addView(downTime)
+                .addView(upPower)
+                .addView(downPower);
+
+
 
 
         roiWin = new Window("intresting ranges");
