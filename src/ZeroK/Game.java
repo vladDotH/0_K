@@ -24,7 +24,7 @@ public class Game extends GameFinder {
                 H = 480 / 2;
 
         GameObject.setDefaultFrameSize(new Point(W, H));
-        new Game(0, new Size(W, H), new Size(3, 3))
+        new Game(1, new Size(W, H), new Size(3, 3))
                 .startGame();
     }
 
@@ -41,7 +41,7 @@ public class Game extends GameFinder {
     }
 
 
-    private Bot bot;
+    private LegoBot bot;
     private GameObject ball;
 
     private Window rgbWin;
@@ -53,7 +53,7 @@ public class Game extends GameFinder {
     private Matrix rgbMat, hsvMat, binMat;
 
     private Window robotSetting;
-    private Slider propCoef, kickRange, minBallPixels, borderRange;
+    private Slider propCoef, kickRange, minBallPixels, borderRange, diffCoef;
     private CheckBox automate;
     private Button direction;
 
@@ -122,9 +122,15 @@ public class Game extends GameFinder {
     private void GUIinit() {
         ball = new GameObject();
 
-        L298Motor move = new L298Motor(0, 12, 14);
-        L298Motor kick = new L298Motor(1, 26, 25);
-        bot = new ArduinoBot("COM14", move, kick);
+//        L298Motor move = new L298Motor(0, 12, 14);
+//        L298Motor kick = new L298Motor(1, 26, 25);
+//        bot = new ArduinoBot("COM39", move, kick);
+        bot = new LegoBot("COM8");
+
+        bot.setKickMotor(bot.getController().A);
+        bot.setHelpKicker(bot.getController().B);
+
+        bot.setLR(bot.getController().C, bot.getController().D);
 
         bot.setColor(new Scalar(0, 255, 0));
 
@@ -170,8 +176,7 @@ public class Game extends GameFinder {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                bot.
-                        move(0);
+                bot.move(0);
             }
         });
 
@@ -246,8 +251,11 @@ public class Game extends GameFinder {
             direction.setMessage(String.valueOf(bot.getDirection()));
         });
 
-        propCoef = new Slider("proportional coefficient", 0, 1000, bot.coefs.prop);
-        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue());
+        propCoef = new Slider("proportional coefficient", 0, 1000, (int) bot.coefs.prop);
+        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = (float)propCoef.getValue() / 100);
+
+        diffCoef = new Slider("diff coefficient", 0, 1000, (int) bot.coefs.diff);
+        diffCoef.setChangeListener(changeEvent -> bot.coefs.diff = (float)diffCoef.getValue() / 100);
 
         kickRange = new Slider("kick range", 0, 60, bot.getKickRange());
         kickRange.setChangeListener(changeEvent -> bot.setKickRange(kickRange.getValue()));
@@ -264,9 +272,10 @@ public class Game extends GameFinder {
         robotSetting.addView(direction)
                 .addView(automate)
                 .addView(propCoef)
+                .addView(diffCoef)
                 .addView(kickRange)
-                .addView(minBallPixels);
-
+                .addView(minBallPixels)
+                .addView(borderRange);
 
         roiWin = new Window("intresting ranges");
 

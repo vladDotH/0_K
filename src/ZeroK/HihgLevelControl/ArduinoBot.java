@@ -8,7 +8,7 @@ public class ArduinoBot extends Bot {
 
     Moveable mover, kicker;
 
-    private int lowSpeed = -80, highSpeed = 255;
+    private int lowSpeed = -100, highSpeed = 255;
 
     public ArduinoBot(String port, Moveable mover, Moveable kicker) {
         this.mover = mover;
@@ -41,6 +41,8 @@ public class ArduinoBot extends Bot {
                 Thread.sleep(downTime);
 
                 hammerMove(0);
+
+                Thread.sleep(downTime);
 
                 kickLock = false;
             } catch (InterruptedException e) {

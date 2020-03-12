@@ -52,14 +52,18 @@ public abstract class Bot extends GameObject {
             delX = (ball.getPos().x - this.getPos().x);
 
         double speed = delX * coefs.prop
-                + Math.pow(delX, 3) * coefs.cube;
+                + Math.pow(delX, 3) * coefs.cube
+                + (delX - oldDelta) * coefs.diff;
+
+        oldDelta = delX;
 
         move((int) speed);
     }
 
     protected int kickRange = 30;
+    protected double oldDelta = 0;
 
-    protected int upTime = 200, downTime = 200;
+    protected int upTime = 170, downTime = 440;
     protected boolean automate = false;
     protected int direction = 1;
     protected int minBallPixels = 30;
@@ -95,7 +99,7 @@ public abstract class Bot extends GameObject {
     }
 
     public static class Coefs {
-        public int prop = 10, cube = 0, diff = 0, intg = 0;
+        public float prop = 400, cube = 0, diff = 0, intg = 0;
     }
 
 }
