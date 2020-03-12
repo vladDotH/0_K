@@ -24,7 +24,7 @@ public class Game extends GameFinder {
                 H = 480 / 2;
 
         GameObject.setDefaultFrameSize(new Point(W, H));
-        new Game(1, new Size(W, H), new Size(3, 3))
+        new Game(0, new Size(W, H), new Size(3, 3))
                 .startGame();
     }
 
@@ -41,7 +41,7 @@ public class Game extends GameFinder {
     }
 
 
-    private LegoBot bot;
+    private Bot bot;
     private GameObject ball;
 
     private Window rgbWin;
@@ -53,7 +53,9 @@ public class Game extends GameFinder {
     private Matrix rgbMat, hsvMat, binMat;
 
     private Window robotSetting;
-    private Slider propCoef, kickRange, minBallPixels, borderRange, diffCoef;
+    private Slider propCoef, cubeCoef, diffCoef, intgCoef,
+            kickRange, minBallPixels, borderRange,
+            upTime, upPower, downTime, downPower;
     private CheckBox automate;
     private Button direction;
 
@@ -122,15 +124,7 @@ public class Game extends GameFinder {
     private void GUIinit() {
         ball = new GameObject();
 
-//        L298Motor move = new L298Motor(0, 12, 14);
-//        L298Motor kick = new L298Motor(1, 26, 25);
-//        bot = new ArduinoBot("COM39", move, kick);
-        bot = new LegoBot("COM8");
-
-        bot.setKickMotor(bot.getController().A);
-        bot.setHelpKicker(bot.getController().B);
-
-        bot.setLR(bot.getController().C, bot.getController().D);
+        bot = new ArduinoBot("COM14");
 
         bot.setColor(new Scalar(0, 255, 0));
 
@@ -161,10 +155,10 @@ public class Game extends GameFinder {
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
                         case 'a':
-                            bot.move(255);
+                            bot.move(255 * bot.getDirection());
                             break;
                         case 'd':
-                            bot.move(-255);
+                            bot.move(-255 * bot.getDirection());
                             break;
                         case 'w':
                             bot.kick();
@@ -176,7 +170,8 @@ public class Game extends GameFinder {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                bot.move(0);
+                bot.
+                        move(0);
             }
         });
 
@@ -251,11 +246,17 @@ public class Game extends GameFinder {
             direction.setMessage(String.valueOf(bot.getDirection()));
         });
 
-        propCoef = new Slider("proportional coefficient", 0, 1000, (int) bot.coefs.prop);
-        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = (float)propCoef.getValue() / 100);
+        propCoef = new Slider("proportional coefficient (/10)", 0, 1000, bot.coefs.prop * 10);
+        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue() / 10);
 
-        diffCoef = new Slider("diff coefficient", 0, 1000, (int) bot.coefs.diff);
-        diffCoef.setChangeListener(changeEvent -> bot.coefs.diff = (float)diffCoef.getValue() / 100);
+        cubeCoef = new Slider("cubic coefficient (/100)", 0, 1000, bot.coefs.cube);
+        cubeCoef.setChangeListener(changeEvent -> bot.coefs.cube = cubeCoef.getValue() / 100);
+
+        diffCoef = new Slider("differential coefficient (/100)", 0, 1000, bot.coefs.diff);
+        diffCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 100);
+
+        intgCoef = new Slider("integral coefficient (/1000)", 0, 1000, bot.coefs.intg);
+        intgCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 1000);
 
         kickRange = new Slider("kick range", 0, 60, bot.getKickRange());
         kickRange.setChangeListener(changeEvent -> bot.setKickRange(kickRange.getValue()));
@@ -266,16 +267,38 @@ public class Game extends GameFinder {
         automate = new CheckBox("autoplay", bot.getMode());
         automate.setActionListener(actionEvent -> bot.switchMode());
 
-        borderRange = new Slider("border range", 0, 100,  bot.getBorderRange());
+        borderRange = new Slider("border range", 0, 100, bot.getBorderRange());
         borderRange.setChangeListener(changeEvent -> bot.setBorderRange(borderRange.getValue()));
+
+        upTime = new Slider("kick up time", 0, 1023, bot.getUpTime());
+        upTime.setChangeListener(changeEvent -> bot.setUpTime(upTime.getValue()));
+
+        downTime = new Slider("kick down time", 0, 1023, bot.getDownTime());
+        downTime.setChangeListener(changeEvent -> bot.setDownTime(downTime.getValue()));
+
+        upPower = new Slider("kick up power", -255, 255, bot.getUpSpeed());
+        upPower.setChangeListener(changeEvent -> bot.setUpSpeed(upPower.getValue()));
+
+        downPower = new Slider("kick down power", -255, 255, bot.getDownSpeed());
+        downPower.setChangeListener(changeEvent -> bot.setDownSpeed(downPower.getValue()));
 
         robotSetting.addView(direction)
                 .addView(automate)
                 .addView(propCoef)
+                .addView(cubeCoef)
                 .addView(diffCoef)
+                .addView(intgCoef)
                 .addView(kickRange)
                 .addView(minBallPixels)
-                .addView(borderRange);
+                .addView(borderRange)
+
+                .addView(upTime)
+                .addView(downTime)
+                .addView(upPower)
+                .addView(downPower);
+
+
+
 
         roiWin = new Window("intresting ranges");
 

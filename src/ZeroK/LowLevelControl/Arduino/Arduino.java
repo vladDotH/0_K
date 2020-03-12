@@ -1,15 +1,17 @@
 package ZeroK.LowLevelControl.Arduino;
 
+import ZeroK.LowLevelControl.SafeSerialPort;
 import jssc.*;
+import org.opencv.core.Mat;
 
 import java.util.*;
 
 public class Arduino implements SerialPortEventListener, AutoCloseable {
 
-    private SerialPort port;
+    private SafeSerialPort port;
 
     public Arduino(String portName) {
-        port = new SerialPort(portName);
+        port = new SafeSerialPort(portName);
         try {
             port.openPort();
 
@@ -27,18 +29,14 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         } catch (SerialPortException | InterruptedException ex) {
             ex.printStackTrace();
         }
-
-        refreshBytes();
     }
 
     public void digitalWrite(int pin, Mode mode) {
         try {
-            port.writeByte((byte) Mode.DIGITAL.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) mode.ordinal());
+            byte[] msg = {(byte) Mode.DIGITAL.ordinal(), (byte) pin, (byte) mode.ordinal()};
+            port.writeBytes(msg);
 
             Thread.sleep(1);
-
         } catch (SerialPortException | InterruptedException ex) {
             ex.printStackTrace();
         }
@@ -46,200 +44,25 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
     public void analogWrite(int pin, int value) {
         try {
-            port.writeByte((byte) Mode.ANALOG.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) value);
+            byte[] msg = {(byte) Mode.PWM.ordinal(), (byte) pin, (byte) value};
+            port.writeBytes(msg);
 
             Thread.sleep(1);
-
         } catch (SerialPortException | InterruptedException ex) {
             ex.printStackTrace();
         }
     }
-
-    public void pinMode(int pin, Mode mode) {
-        try {
-            port.writeByte((byte) Mode.PIN_MODE.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) mode.ordinal());
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void sonicRead(int trig, int echo) {
-        try {
-            port.writeByte((byte) Mode.US_GET.ordinal());
-            port.writeByte((byte) trig);
-            port.writeByte((byte) echo);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void servoStart(int pin, int degree) {
-        try {
-            port.writeByte((byte) Mode.SERVO.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) degree);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void servoAttach(int pin) {
-        try {
-            port.writeByte((byte) Mode.ATTACH.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void servoDetach(int pin) {
-        try {
-            port.writeByte((byte) Mode.DETACH.ordinal());
-            port.writeByte((byte) pin);
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     * steppers
-     */
-
-    @Deprecated
-    public void setMoveSpeed(int speed) {
-        try {
-            port.writeByte((byte) Mode.SET_MOVESPEED.ordinal());
-            port.writeByte((byte) speed);
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void setKickSpeed(int speed) {
-        try {
-            port.writeByte((byte) Mode.SET_KICKSPEED.ordinal());
-            port.writeByte((byte) speed);
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void setMoveDir(boolean dir) {
-        try {
-            port.writeByte((byte) Mode.SET_MOVE_DIR.ordinal());
-            port.writeByte((byte) (dir ? 1 : 0));
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void setKickDir(boolean dir) {
-        try {
-            port.writeByte((byte) Mode.SET_KICK_DIR.ordinal());
-            port.writeByte((byte) (dir ? 1 : 0));
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void setMoveAble(boolean state) {
-        try {
-            port.writeByte((byte) Mode.SET_MOVE_ABLE.ordinal());
-            port.writeByte((byte) (state ? 1 : 0));
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Deprecated
-    public void setKickAble(boolean state) {
-        try {
-            port.writeByte((byte) Mode.SET_KICK_ABLE.ordinal());
-            port.writeByte((byte) (state ? 1 : 0));
-            port.writeByte((byte) 0);
-
-            Thread.sleep(1);
-
-        } catch (SerialPortException | InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /**
-     *
-     */
 
     @Override
     public void serialEvent(SerialPortEvent event) {
         if (event.isRXCHAR() && event.getEventValue() > 0) {
             try {
                 byte[] data = port.readBytes(event.getEventValue());
-
                 System.out.println(Arrays.toString(data));
-
                 Thread.sleep(1);
             } catch (SerialPortException | InterruptedException ex) {
                 ex.printStackTrace();
             }
-        }
-    }
-
-    private void refreshBytes() {
-        try {
-            port.writeByte((byte) Mode.REFRESH.ordinal());
-            port.writeByte((byte) Mode.REFRESH.ordinal());
-            port.writeByte((byte) Mode.REFRESH.ordinal());
-        } catch (SerialPortException e) {
-            e.printStackTrace();
         }
     }
 
@@ -252,37 +75,111 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
         }
     }
 
+    /**
+     * @param time [0...1023] ms
+     */
+    public void kickConfigUpTime(int time) {
+        try {
+            byte[] msg = {(byte) Mode.KICK_CONFIG_UP_TIME.ordinal(), (byte) (time / 4), 0};
+            port.writeBytes(msg);
+
+            Thread.sleep(1);
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * @param time [0...1023] ms
+     */
+    public void kickConfigDownTime(int time) {
+        try {
+            byte[] msg = {(byte) Mode.KICK_CONFIG_DOWN_TIME.ordinal(), (byte) (time / 4), 0};
+            port.writeBytes(msg);
+
+            Thread.sleep(1);
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * @param speed [0...1023] ms
+     */
+    public void kickConfigUpSpeed(int speed) {
+        try {
+            byte[] msg = {(byte) Mode.KICK_CONFIG_UP_SPEED.ordinal(),
+                    (byte) (Math.abs(speed)),
+                    (byte) (speed > 0 ? 1 : 0)};
+            port.writeBytes(msg);
+
+            Thread.sleep(1);
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * @param speed [0...1023] ms
+     */
+    public void kickConfigDownSpeed(int speed) {
+        try {
+            byte[] msg = {(byte) Mode.KICK_CONFIG_DOWN_SPEED.ordinal(),
+                    (byte) (Math.abs(speed)),
+                    (byte) (speed > 0 ? 1 : 0)};
+            port.writeBytes(msg);
+
+            Thread.sleep(1);
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
+    /**
+     * @param speed [-255...255]
+     */
+    public void move(int speed) {
+        try {
+            byte[] msg = {(byte) Mode.MOVE.ordinal(),
+                    (byte) speed,
+                    (byte) (speed > 0 ? 1 : 0)};
+
+            port.writeBytes(msg);
+
+            Thread.sleep(1);
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void kick() {
+        try {
+            byte[] msg = {(byte) Mode.KICK.ordinal(), 0, 0};
+
+            port.writeBytes(msg);
+
+            Thread.sleep(1);
+        } catch (SerialPortException | InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public enum Mode {
         LOW,
         HIGH,
 
         DIGITAL,
-        ANALOG,
+        PWM,
 
-        PIN_MODE,
-        OUT,
-        IN,
+        MOVE,
 
-        @Deprecated
-        US_GET,
+        KICK_CONFIG_UP_TIME,
+        KICK_CONFIG_DOWN_TIME,
 
-        @Deprecated
-        SERVO,
+        KICK_CONFIG_UP_SPEED,
+        KICK_CONFIG_DOWN_SPEED,
 
-        @Deprecated
-        ATTACH,
-        @Deprecated
-        DETACH,
-
-        REFRESH,
-
-        SET_MOVESPEED,
-        SET_KICKSPEED,
-
-        SET_MOVE_ABLE,
-        SET_KICK_ABLE,
-
-        SET_MOVE_DIR,
-        SET_KICK_DIR
+        KICK,
     }
 }

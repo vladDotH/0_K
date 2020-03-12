@@ -8,8 +8,6 @@ public class LegoBot extends Bot {
 
     private jEV3.Motor kickMotor, helpKicker;
 
-    private int upSpeed = 100, downSpeed = 30;
-
     public void setKickMotor(jEV3.Motor kickMotor) {
         this.kickMotor = kickMotor;
     }

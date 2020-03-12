@@ -2,7 +2,6 @@ package ZeroK.Samples;
 
 import ZeroK.LowLevelControl.Arduino.Arduino;
 import ZeroK.LowLevelControl.Arduino.L298Motor;
-import ZeroK.LowLevelControl.Arduino.Motor;
 import jssc.SerialPort;
 
 import java.util.Scanner;
