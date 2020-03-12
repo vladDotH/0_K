@@ -124,7 +124,7 @@ public class Game extends GameFinder {
     private void GUIinit() {
         ball = new GameObject();
 
-        bot = new ArduinoBot("COM14");
+        bot = new ArduinoBot("COM6");
 
         bot.setColor(new Scalar(0, 255, 0));
 
@@ -155,10 +155,10 @@ public class Game extends GameFinder {
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
                         case 'a':
-                            bot.move(255 * bot.getDirection());
+                            bot.move(255);
                             break;
                         case 'd':
-                            bot.move(-255 * bot.getDirection());
+                            bot.move(-255);
                             break;
                         case 'w':
                             bot.kick();
@@ -170,8 +170,7 @@ public class Game extends GameFinder {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                bot.
-                        move(0);
+                bot.move(0);
             }
         });
 
