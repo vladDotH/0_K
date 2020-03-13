@@ -8,6 +8,10 @@ public class ArduinoBot extends Bot {
 
     public ArduinoBot(String port) {
         connect(port);
+        setUpTime(upTime);
+        setUpSpeed(upSpeed);
+        setDownTime(downTime);
+        setDownSpeed(downSpeed);
     }
 
     @Override

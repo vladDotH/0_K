@@ -142,7 +142,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
     public void move(int speed) {
         try {
             byte[] msg = {(byte) Mode.MOVE.ordinal(),
-                    (byte) speed,
+                    (byte) Math.abs(speed),
                     (byte) (speed > 0 ? 1 : 0)};
 
             port.writeBytes(msg);

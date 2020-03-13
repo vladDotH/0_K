@@ -44,10 +44,13 @@ public class LegoBot extends Bot {
 
         new Thread(() -> {
             try {
-                hammerMove(-upSpeed);
+                hammerMove(-downSpeed);
+                Thread.sleep(downTime / 4);
+
+                hammerMove(upSpeed);
                 Thread.sleep(upTime);
 
-                hammerMove(downSpeed);
+                hammerMove(-downSpeed);
                 Thread.sleep(downTime);
 
                 hammerMove(0);
