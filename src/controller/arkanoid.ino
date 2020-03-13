@@ -1,7 +1,8 @@
 #include <BluetoothSerial.h>
+#include <pthread.h>
 
 enum Mode {
-  DIGITAL,
+  DIGITAL = 2,
   PWM,
 
   MOVE,
@@ -52,28 +53,37 @@ struct Motor {
       digitalWrite(dir1, LOW);
     }
 
-    ledcWrite( channel, power );
+    ledcWrite( channel, abs(power) );
   }
 };
 
-Motor mover(12, 14, 13, 0), kicker(25, 26, 27, 1);
-
-TaskHandle_t kick;
+Motor kicker(12, 14, 13, 0), mover(25, 26, 27, 1);
 
 int up_time,
     down_time,
     up_power,
     down_power;
 
-volatile int kick_flag = false;
+volatile bool kick_flag = false;
 
-void kick_task( void *pvParameters ) {
+void kick_task(void *args) {
   while (true) {
+    delay(1);
     if (kick_flag) {
+
+      kicker.move(up_power / 2);
+      delay(up_time / 2);
+
       kicker.move(up_power);
       delay(up_time);
+
       kicker.move(down_power);
       delay(down_time);
+
+      kicker.move(down_power / 1.5);
+      delay(down_time);
+
+      kicker.move(0);
       kick_flag = false;
     }
   }
@@ -81,29 +91,35 @@ void kick_task( void *pvParameters ) {
 
 void setup() {
   esp_bt.begin("Esp32 arkanoid");
+  Serial.begin(115200);
 
   mover.setup();
   kicker.setup();
 
-  xTaskCreatePinnedToCore(
-    kick_task,   /* Task function. */
-    "kick task",     /* name of task. */
-    10000,       /* Stack size of task */
-    NULL,        /* parameter of the task */
-    1,           /* priority of the task */
-    &kick,      /* Task handle to keep track of created task */
-    0);          /* pin task to core 0 */
+  xTaskCreate(
+    kick_task,
+    "kick task",
+    10000,
+    NULL,
+    1,
+    NULL);
 
   delay(500);
 }
 
 void loop() {
+  delay(1);
   if ( esp_bt.available() ) {
     msg[byteCount] = esp_bt.read();
     byteCount ++;
+
+    Serial.print(msg[byteCount - 1]);
+    Serial.print(" ");
   }
 
   if ( byteCount == 3 ) {
+
+    Serial.println("");
 
     if ( msg[0] == DIGITAL ) {
       digitalWrite( msg[1], msg[2] );
