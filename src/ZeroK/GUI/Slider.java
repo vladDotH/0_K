@@ -25,7 +25,7 @@ public class Slider extends View {
         JSONObject data = null;
 
         try {
-            data = (JSONObject) parser.parse(new FileReader("C:\\Users\\KK\\IdeaProjects\\Zero_K\\src\\ZeroK\\GUI\\sliders_data.json"));
+            data = (JSONObject) parser.parse(new FileReader("sliders_data.json"));
         } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class Slider extends View {
             data.put(s.getName(), s.getValue());
         }
 
-        try (FileWriter file = new FileWriter("C:\\Users\\KK\\IdeaProjects\\Zero_K\\src\\ZeroK\\GUI\\sliders_data.json")) {
+        try (FileWriter file = new FileWriter("sliders_data.json")) {
             file.write(data.toJSONString());
             file.flush();
         } catch (IOException e) {
