@@ -7,7 +7,7 @@ import java.awt.event.KeyListener;
 
 public class Window extends View {
 
-    private static int xPos = 60, yPos = 60;
+    private static int xPos = 30, yPos = 30;
 
     private JFrame frame;
 
@@ -27,12 +27,12 @@ public class Window extends View {
         frame.setLocation(new Point(xPos, yPos));
         frame.setVisible(true);
 
-        xPos += frame.getWidth() + 50;
+        xPos += frame.getWidth() + 20;
 
         if( xPos >= 1000 ){
-            xPos = 160;
+            xPos = 30;
 
-            yPos += frame.getHeight() + 50;
+            yPos += frame.getHeight() + 20;
         }
 
     }

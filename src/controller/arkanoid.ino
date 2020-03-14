@@ -1,5 +1,4 @@
 #include <BluetoothSerial.h>
-#include <pthread.h>
 
 enum Mode {
   DIGITAL = 2,

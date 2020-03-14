@@ -73,6 +73,8 @@ public class Game extends GameFinder {
     public void startGame() {
         GUIinit();
 
+        Slider.load();
+
         int fps = 0;
         long time = System.currentTimeMillis();
 
@@ -109,6 +111,7 @@ public class Game extends GameFinder {
             }
         }
 
+        Slider.save();
         bot.close();
         this.close();
 
@@ -155,10 +158,10 @@ public class Game extends GameFinder {
                 if (!bot.getMode()) {
                     switch (e.getKeyChar()) {
                         case 'a':
-                            bot.move(255);
+                            bot.move(255 * bot.getDirection());
                             break;
                         case 'd':
-                            bot.move(-255);
+                            bot.move(-255 * bot.getDirection());
                             break;
                         case 'w':
                             bot.kick();
@@ -170,7 +173,12 @@ public class Game extends GameFinder {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                bot.move(0);
+                switch (e.getKeyChar()) {
+                    case 'a':
+                    case 'd':
+                        bot.move(0);
+                        break;
+                }
             }
         });
 
