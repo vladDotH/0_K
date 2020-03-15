@@ -357,10 +357,8 @@ public class Game extends GameFinder {
         rgbWin.start();
         hsvWin.start();
         binWin.start();
-
-        robotSetting.start();
         imgSetting.start();
-
         roiWin.start();
+        robotSetting.start();
     }
 }

@@ -34,30 +34,38 @@ public abstract class Bot extends GameObject {
             return;
         }
 
-        double delY = Math.abs(ball.getPos().y - this.getPos().y);
+        double diffY = Math.abs(ball.getPos().y - this.getPos().y);
 
-        if (delY < kickRange) {
+        if (diffY < kickRange) {
             kick();
         }
 
-        double delX;
+        double diffX;
 
         if (Math.abs(roi.getDot1().x - ball.getPos().x) < borderRange)
-            delX = (roi.getDot1().x + borderRange) - getPos().x;
+            diffX = (roi.getDot1().x + borderRange) - getPos().x;
 
         else if (Math.abs(roi.getDot2().x - ball.getPos().x) < borderRange)
-            delX = (roi.getDot2().x - borderRange) - getPos().x;
+            diffX = (roi.getDot2().x - borderRange) - getPos().x;
 
         else
-            delX = (ball.getPos().x - this.getPos().x);
+            diffX = (ball.getPos().x - this.getPos().x);
 
-        double speed = delX * coefs.prop
-                + Math.pow(delX, 3) * coefs.cube;
+        double diffVal = (diffX - prevDiff) * coefs.diff;
+        prevDiff = diffX;
+
+        integralVal += diffVal;
+
+        double speed = diffX * coefs.prop
+                + Math.pow(diffX, 3) * coefs.cube
+                + diffVal
+                + integralVal * coefs.intg;
 
         move((int) speed);
     }
 
     protected int kickRange = 30;
+    protected double prevDiff = 0, integralVal = 0;
 
     protected int upTime = 140, downTime = 330;
     protected int downSpeed = -120, upSpeed = 255;

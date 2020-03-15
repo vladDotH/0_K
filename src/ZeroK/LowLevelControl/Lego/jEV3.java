@@ -129,15 +129,12 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
         byte[] message = new byte[12];
         byte[] defaultPack = packMessage(MessageType.speed);
 
-        for (int i = 0; i < defaultPack.length; i++) {
-            message[i] = defaultPack[i];
-        }
+        System.arraycopy(defaultPack, 0, message, 0, defaultPack.length);
 
         message[9] = motor;
         message[10] = -127;
         message[11] = (byte) speed;
 
-        //System.out.println( "speed" + Arrays.toString( message ));
         send(message);
     }
 
@@ -145,13 +142,10 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
         byte[] message = new byte[10];
         byte[] defaultPack = packMessage(MessageType.start);
 
-        for (int i = 0; i < defaultPack.length; i++) {
-            message[i] = defaultPack[i];
-        }
+        System.arraycopy(defaultPack, 0, message, 0, defaultPack.length);
 
         message[9] = motor;
 
-        //System.out.println( "start" + Arrays.toString( message ));
         send(message);
     }
 
@@ -159,14 +153,11 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
         byte[] message = new byte[11];
         byte[] defaultPack = packMessage(MessageType.stop);
 
-        for (int i = 0; i < defaultPack.length; i++) {
-            message[i] = defaultPack[i];
-        }
+        System.arraycopy(defaultPack, 0, message, 0, defaultPack.length);
 
         message[9] = motor;
         message[10] = stopMode;
 
-        //System.out.println( "stop" + Arrays.toString( message ));
         send(message);
     }
 
@@ -180,11 +171,7 @@ public class jEV3 implements SerialPortEventListener, AutoCloseable {
     }
 
     private void send(byte[] message) {
-        try {
-            ev3.writeBytes(message);
-        } catch (SerialPortException e) {
-            e.printStackTrace();
-        }
+        ev3.writeBytes(message);
     }
 
     @Override

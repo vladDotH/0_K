@@ -41,7 +41,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -52,7 +52,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -73,7 +73,8 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
     @Override
     public void close() {
         try {
-            port.closePort();
+            if (port.isOpened())
+                port.closePort();
         } catch (SerialPortException ex) {
             ex.printStackTrace();
         }
@@ -88,7 +89,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -102,7 +103,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -118,7 +119,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -134,7 +135,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -152,7 +153,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }
@@ -164,7 +165,7 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
             port.writeBytes(msg);
 
             Thread.sleep(1);
-        } catch (SerialPortException | InterruptedException ex) {
+        } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
     }

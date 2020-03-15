@@ -8,9 +8,14 @@ public class SafeSerialPort extends SerialPort {
     }
 
     @Override
-    public boolean writeBytes(byte[] buffer) throws SerialPortException {
+    public boolean writeBytes(byte[] buffer) {
         synchronized (this) {
-            return super.writeBytes(buffer);
+            try {
+                return super.writeBytes(buffer);
+            } catch (SerialPortException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 }

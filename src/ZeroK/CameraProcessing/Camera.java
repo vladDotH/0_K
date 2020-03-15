@@ -6,8 +6,10 @@ import org.opencv.videoio.VideoCapture;
 public class Camera {
     protected VideoCapture capture;
     protected Mat frame;
+    protected int port;
 
     public Camera(int port) {
+        this.port = port;
         frame = new Mat();
         capture = new VideoCapture(port);
     }
