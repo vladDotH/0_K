@@ -32,7 +32,8 @@ public class Slider extends View {
 
         if (data != null) {
             for (Slider s : sliders) {
-                s.slider.setValue(Math.toIntExact((Long) data.get(s.getName())));
+                if (data.get(s.getName()) != null)
+                    s.slider.setValue(Math.toIntExact((Long) data.get(s.getName())));
             }
         }
 

@@ -40,7 +40,7 @@ public abstract class Bot extends GameObject {
             kick();
         }
 
-        double delX = 0;
+        double delX;
 
         if (Math.abs(roi.getDot1().x - ball.getPos().x) < borderRange)
             delX = (roi.getDot1().x + borderRange) - getPos().x;
@@ -97,7 +97,7 @@ public abstract class Bot extends GameObject {
     }
 
     public static class Coefs {
-        public int prop = 10, cube = 0, diff = 0, intg = 0;
+        public double prop = 10, cube = 0, diff = 0, intg = 0;
     }
 
     public void setUpTime(int upTime) {

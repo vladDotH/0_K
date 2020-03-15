@@ -253,17 +253,17 @@ public class Game extends GameFinder {
             direction.setMessage(String.valueOf(bot.getDirection()));
         });
 
-        propCoef = new Slider("proportional coefficient (/10)", 0, 1000, bot.coefs.prop * 10);
-        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue() / 10);
+        propCoef = new Slider("proportional coefficient (/10)", 0, 1000, (int) (bot.coefs.prop * 10));
+        propCoef.setChangeListener(changeEvent -> bot.coefs.prop = propCoef.getValue() / 10.d);
 
-        cubeCoef = new Slider("cubic coefficient (/100)", 0, 1000, bot.coefs.cube);
-        cubeCoef.setChangeListener(changeEvent -> bot.coefs.cube = cubeCoef.getValue() / 100);
+        cubeCoef = new Slider("cubic coefficient (/100)", 0, 1000, (int) bot.coefs.cube);
+        cubeCoef.setChangeListener(changeEvent -> bot.coefs.cube = cubeCoef.getValue() / 100.d);
 
-        diffCoef = new Slider("differential coefficient (/100)", 0, 1000, bot.coefs.diff);
-        diffCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 100);
+        diffCoef = new Slider("differential coefficient (/10)", 0, 1000, (int) bot.coefs.diff);
+        diffCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 10.d);
 
-        intgCoef = new Slider("integral coefficient (/1000)", 0, 1000, bot.coefs.intg);
-        intgCoef.setChangeListener(changeEvent -> bot.coefs.diff = diffCoef.getValue() / 1000);
+        intgCoef = new Slider("integral coefficient (/100)", 0, 1000, (int) bot.coefs.intg);
+        intgCoef.setChangeListener(changeEvent -> bot.coefs.intg = intgCoef.getValue() / 100.d);
 
         kickRange = new Slider("kick range", 0, 60, bot.getKickRange());
         kickRange.setChangeListener(changeEvent -> bot.setKickRange(kickRange.getValue()));

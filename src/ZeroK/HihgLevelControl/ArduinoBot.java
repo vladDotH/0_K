@@ -8,10 +8,14 @@ public class ArduinoBot extends Bot {
 
     public ArduinoBot(String port) {
         connect(port);
-        setUpTime(upTime);
-        setUpSpeed(upSpeed);
-        setDownTime(downTime);
-        setDownSpeed(downSpeed);
+
+        if (controller.isOpened()) {
+            System.out.println("Connected to " + port);
+            setUpTime(upTime);
+            setUpSpeed(upSpeed);
+            setDownTime(downTime);
+            setDownSpeed(downSpeed);
+        } else System.out.println("Port not opened");
     }
 
     @Override

@@ -10,6 +10,10 @@ public class Arduino implements SerialPortEventListener, AutoCloseable {
 
     private SafeSerialPort port;
 
+    public boolean isOpened() {
+        return port.isOpened();
+    }
+
     public Arduino(String portName) {
         port = new SafeSerialPort(portName);
         try {
